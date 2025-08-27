@@ -3,11 +3,11 @@
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup leftMotors({-10, -7, -9}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({8, 2, 1}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
-pros::Motor bottomIntakeMotors(11, pros::MotorGearset::blue);
-pros::Motor middleIntakeMotors(18, pros::MotorGearset::blue);
-pros::Motor topIntakeMotors(19, pros::MotorGearset::blue);
+pros::MotorGroup leftMotors({-9, -19, -20}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
+pros::MotorGroup rightMotors({11, 12, 14}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::Motor bottomIntakeMotors(13, pros::MotorGearset::blue);
+//pros::Motor middleIntakeMotors(18, pros::MotorGearset::blue);
+pros::Motor topIntakeMotors(18, pros::MotorGearset::blue);
 
 pros::adi::DigitalOut matchloadpneumatic('h');
 pros::adi::DigitalOut aligner('g');
@@ -80,7 +80,7 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
 
 
-Intake intake(bottomIntakeMotors, middleIntakeMotors, topIntakeMotors);
+Intake intake(bottomIntakeMotors, topIntakeMotors);
 
 Matchload matchload(matchloadpneumatic);
 
@@ -120,9 +120,9 @@ void opcontrol() {
         int vert = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int horz = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
         chassis.arcade(vert, horz);
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.score_middle_goal(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
+        //if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
+        //else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.score_middle_goal(); }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.outtake_block(); }
         else { intake.stop_intake(); }
 

@@ -5,17 +5,17 @@
 class Intake {
     public:
         //constructor
-        Intake(pros::Motor bottomIntakeMotors, pros::Motor middleIntakeMotors, pros::Motor topIntakeMotors);
+        Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors);
 
         //intake Motors
         pros::Motor bottomIntakeMotors;
-        pros::Motor middleIntakeMotors;
+        //pros::Motor middleIntakeMotors;
         pros::Motor topIntakeMotors;
 
         //intake Functions
         void move_bottom_intake(double velocity);
 
-        void move_middle_intake(double velocity);
+        //void move_middle_intake(double velocity);
 
         void move_top_intake(double velocity);
 
