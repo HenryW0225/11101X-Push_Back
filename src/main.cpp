@@ -8,7 +8,7 @@ pros::Motor bottomIntakeMotors(13, pros::MotorGearset::blue);
 pros::Motor topIntakeMotors(18, pros::MotorGearset::blue);
 
 pros::adi::DigitalOut matchLoadPneumatic('h');
-pros::adi::DigitalOut colorSortPneumatic('a');
+pros::adi::DigitalOut intakePneumatic('a');
 
 
 pros::Imu imu(10);
@@ -80,7 +80,7 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
 
-Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, colorSortPneumatic);
+Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
 
 Matchload matchload(matchLoadPneumatic);
 
@@ -111,11 +111,8 @@ void opcontrol() {
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
         else { intake.stop_intake(); }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-            matchload.matchload_v(1);
-        }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-            matchload.matchload_v(0);
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+            matchload.matchload_change();
         }
 
         pros::delay(10);

@@ -1,8 +1,4 @@
-#include "lemlib/chassis/trackingWheel.hpp"
-#include "lemlib/util.hpp"
-#include "pros/abstract_motor.hpp"
-#include "pros/motor_group.hpp"
-#include "pros/motors.h"
+#include "main.h"
 
 lemlib::TrackingWheel::TrackingWheel(pros::adi::Encoder* encoder, float wheelDiameter, float distance,
                                      float gearRatio) {

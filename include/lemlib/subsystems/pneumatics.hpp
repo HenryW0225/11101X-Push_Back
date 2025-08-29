@@ -12,4 +12,8 @@ class Matchload {
 
         //matchload Functions
         void matchload_v(int value);
+        void matchload_change();
+ 
+        //matchload variables
+        bool matchload_out = false;
 };

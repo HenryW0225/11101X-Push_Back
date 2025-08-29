@@ -5,7 +5,7 @@
 class Intake {
     public:
         //constructor
-        Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut colorSortPneumatic);
+        Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut intakePneumatic);
 
         //intake Motors
         pros::Motor bottomIntakeMotors;
@@ -15,7 +15,7 @@ class Intake {
         pros::Optical colorSensor;
 
         //color sort pneumatic
-        pros::adi::DigitalOut colorSortPneumatic;
+        pros::adi::DigitalOut intakePneumatic;
 
         //intake Functions
         void move_bottom_intake(double velocity);
@@ -35,4 +35,8 @@ class Intake {
         void intake_control();
 
         void color_sort(bool red);
+
+        //intake pneumatic functions
+        void intakePneumatic_v(int value);
+
 };

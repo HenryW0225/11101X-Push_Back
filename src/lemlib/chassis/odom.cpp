@@ -1,8 +1,3 @@
-// The implementation below is mostly based off of
-// the document written by 5225A (Pilons)
-// Here is a link to the original document
-// http://thepilons.ca/wp-content/uploads/2018/10/Tracking.pdf
-
 #include <math.h>
 #include "pros/rtos.hpp"
 #include "lemlib/util.hpp"
@@ -100,12 +95,6 @@ void lemlib::update() {
     prevHorizontal2 = horizontal2Raw;
     prevImu = imuRaw;
 
-    // calculate the heading of the robot
-    // Priority:
-    // 1. Horizontal tracking wheels
-    // 2. Vertical tracking wheels
-    // 3. Inertial Sensor
-    // 4. Drivetrain
     float heading = odomPose.theta;
     // calculate the heading using the horizontal tracking wheels
     if (odomSensors.horizontal1 != nullptr && odomSensors.horizontal2 != nullptr)
