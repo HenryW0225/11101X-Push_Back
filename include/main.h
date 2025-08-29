@@ -36,6 +36,8 @@
 
 #include "api.h"
 
+#include "lemlib/api.hpp"
+
 /**
  * You should add more #includes here
  */

@@ -1,21 +1,24 @@
 #pragma once
 
-#include "pros/motors.hpp"
+#include "api.h"
 
 class Intake {
     public:
         //constructor
-        Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors);
+        Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut colorSortPneumatic);
 
         //intake Motors
         pros::Motor bottomIntakeMotors;
-        //pros::Motor middleIntakeMotors;
         pros::Motor topIntakeMotors;
+
+        //color sensor
+        pros::Optical colorSensor;
+
+        //color sort pneumatic
+        pros::adi::DigitalOut colorSortPneumatic;
 
         //intake Functions
         void move_bottom_intake(double velocity);
-
-        //void move_middle_intake(double velocity);
 
         void move_top_intake(double velocity);
 
@@ -30,4 +33,6 @@ class Intake {
         void stop_intake();
     
         void intake_control();
+
+        void color_sort(bool red);
 };

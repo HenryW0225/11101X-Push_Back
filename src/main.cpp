@@ -1,18 +1,20 @@
 #include "main.h"
-#include "lemlib/api.hpp" 
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup leftMotors({-9, -19, -20}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({11, 12, 14}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup leftMotors({-9, -19, -20}, pros::MotorGearset::blue); 
+pros::MotorGroup rightMotors({11, 12, 14}, pros::MotorGearset::blue); 
 pros::Motor bottomIntakeMotors(13, pros::MotorGearset::blue);
-//pros::Motor middleIntakeMotors(18, pros::MotorGearset::blue);
 pros::Motor topIntakeMotors(18, pros::MotorGearset::blue);
 
-pros::adi::DigitalOut matchloadpneumatic('h');
-pros::adi::DigitalOut aligner('g');
+pros::adi::DigitalOut matchLoadPneumatic('h');
+pros::adi::DigitalOut colorSortPneumatic('a');
+
 
 pros::Imu imu(10);
+
+pros::Optical colorSensor(1);
+
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontalEnc(20);
@@ -23,7 +25,6 @@ lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_275, -5.
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_275, -2.5);
 
-// drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
                               10, // 10 inch track width
@@ -33,10 +34,10 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(10, // proportional gain (kP)
-                                            0, // integral gain (kI)
-                                            3, // derivative gain (kD)
-                                            3, // anti windup
+lemlib::ControllerSettings linearController(10, // (kP)
+                                            0, // (kI)
+                                            3, // (kD)
+                                            3, //
                                             1, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
@@ -45,9 +46,9 @@ lemlib::ControllerSettings linearController(10, // proportional gain (kP)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
-                                             0, // integral gain (kI)
-                                             10, // derivative gain (kD)
+lemlib::ControllerSettings angularController(2, // (kP)
+                                             0, // (kI)
+                                             10, // (kD)
                                              3, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -57,11 +58,11 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 );
 
 // sensors for odometry
-lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
-                            nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
-                            &horizontal, // horizontal tracking wheel
-                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu // inertial sensor
+lemlib::OdomSensors sensors(&vertical, 
+                            nullptr, 
+                            &horizontal, 
+                            nullptr,
+                            &imu
 );
 
 // input curve for throttle input during driver control
@@ -79,27 +80,13 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
 
+Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, colorSortPneumatic);
 
-Intake intake(bottomIntakeMotors, topIntakeMotors);
-
-Matchload matchload(matchloadpneumatic);
+Matchload matchload(matchLoadPneumatic);
 
 void initialize() {
-    pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate(); // calibrate sensors
-
-    pros::Task screenTask([&]() {
-        while (true) {
-            // print robot location to the brain screen
-            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-            // log position telemetry
-            lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
-            // delay to save resources
-            pros::delay(50);
-        }
-    });
+    pros::lcd::initialize(); 
+    chassis.calibrate(); 
 }
 
 void disabled() {}
@@ -107,7 +94,6 @@ void disabled() {}
 void competition_initialize() {}
 
 // get a path used for pure pursuit
-// this needs to be put outside a function
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 
@@ -120,10 +106,9 @@ void opcontrol() {
         int vert = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int horz = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
         chassis.arcade(vert, horz);
-        //if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
-        //else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.score_middle_goal(); }
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.outtake_block(); }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtake_block(); }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
         else { intake.stop_intake(); }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
@@ -132,7 +117,7 @@ void opcontrol() {
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
             matchload.matchload_v(0);
         }
-        // delay to save resources
+
         pros::delay(10);
     }
 }
