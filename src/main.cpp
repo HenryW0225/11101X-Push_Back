@@ -121,6 +121,7 @@ void opcontrol() {
             if (intake.colorSortActive) { intake.colorSortActive = false; } 
             else { intake.colorSortActive = true; }
         }
+        
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             matchload.matchload_change();
         }

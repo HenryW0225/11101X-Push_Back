@@ -55,7 +55,11 @@ class Intake {
 
         void intakePneumatic_v(int value);
 
+        void checkPneumatic();
+
         //intake variables
 
         bool colorSortActive = true;
+        
+        bool intakePneumaticActive = true;
 };
