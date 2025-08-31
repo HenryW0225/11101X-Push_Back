@@ -1,6 +1,5 @@
 #include "main.h"
-#include <map>
-using namespace std;
+
 
 Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut intakePneumatic)
     : bottomIntakeMotors(bottomIntakeMotors),
@@ -8,6 +7,12 @@ Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros
       colorSensor(colorSensor),
       intakePneumatic(intakePneumatic) {}
       
+
+void Intake::calibrate(bool red) {
+    colorSortActive = true;
+    if (red) { red_color_sort(); }
+    else { blue_color_sort(); }
+}
 
 void Intake::move_bottom_intake(double velocity){
     bottomIntakeMotors.move_velocity(velocity);
@@ -23,6 +28,7 @@ void Intake::intakePneumatic_v(int value) {
 
 void Intake::intake_block() {
     move_bottom_intake(600);
+    move_top_intake(50);
 }
 
 void Intake::outtake_block() {
@@ -45,28 +51,63 @@ void Intake::stop_intake() {
     move_top_intake(0);
 }
 
-/*void Intake::color_sort(bool red) {
-    map<bool, double traits[3][2]> colorTraits;
-    colorTraits[true] = [[200, 240], [0.5, 0.9], [250, 255]];
-    colorTraits[false] = [[350, 10], [0.6, 1], [250, 255]];
-    colorSensor.set_led_pwm(100);
-    colorSensor.set_integration_time(5);
-    while (true) {
-        if ((colorSensor.get_hue() >= colorTraits[color][0][0] && colorSensor.get_hue() <= colorTraits[color][0][1]) 
-        && (colorSensor.get_saturation() >= colorTraits[color][1][0] && colorSensor.get_saturation() <= colorTraits[color][1][1]) 
-        && (colorSensor.get_proximity() >= colorTraits[color][2][0])) {
-            // do the color sensor thing 
+void Intake::spit_out() {
+    move_bottom_intake(600);
+    move_top_intake(600);
+}
+
+bool Intake::color_detected(bool red) {
+    if (red) {
+        // red alliance - detecting against blue
+        if ((colorSensor.get_hue() >= 350 || colorSensor.get_hue() <= 10) 
+        /*&& (colorSensor.get_saturation() >= 0.6 && colorSensor.get_saturation() <= 1) 
+        && (colorSensor.get_proximity() >= 250)*/) {
+            return true;
         }
     }
+    else {
+        // blue alliance - detecting against red
+        if ((colorSensor.get_hue() >= 200 && colorSensor.get_hue() <= 240) 
+        /*&& (colorSensor.get_saturation() >= 0.5 && colorSensor.get_saturation() <= 0.9) 
+        && (colorSensor.get_proximity() >= 250)*/) {
+            return true;
+        }
+    }
+    return false;
+}
 
+void Intake::red_color_sort() {
+    colorSensor.set_led_pwm(100);
+    colorSensor.set_integration_time(5);
+    while (colorSortActive) {
+        if (color_detected(true)) {
+            while (color_detected(true)) {
+                spit_out();
+                pros::delay(10);
+            } 
+            pros::delay(250);
+            stop_intake();
+        } 
+        pros::delay(10);
+    }
 }
 
 
 
+void Intake::blue_color_sort() {
+    colorSensor.set_led_pwm(100);
+    colorSensor.set_integration_time(5);
+    while (colorSortActive) {
+        if (color_detected(false)) {
+            while (color_detected(false)) {
+                spit_out();
+                pros::delay(10);
+            } 
+            pros::delay(250);
+            stop_intake();
+        } 
+        pros::delay(10);
+    }
+}
 
 
-int Intake::color_sort_task() {
-    intake.color_sort();
-    return 1;
-}*/
-  

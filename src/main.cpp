@@ -3,8 +3,8 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::MotorGroup leftMotors({-9, -19, -20}, pros::MotorGearset::blue); 
-pros::MotorGroup rightMotors({11, 12, 14}, pros::MotorGearset::blue); 
-pros::Motor bottomIntakeMotors(13, pros::MotorGearset::blue);
+pros::MotorGroup rightMotors({11, 13, 14}, pros::MotorGearset::blue); 
+pros::Motor bottomIntakeMotors(12, pros::MotorGearset::blue);
 pros::Motor topIntakeMotors(18, pros::MotorGearset::blue);
 
 pros::adi::DigitalOut matchLoadPneumatic('h');
@@ -87,6 +87,9 @@ Matchload matchload(matchLoadPneumatic);
 void initialize() {
     pros::lcd::initialize(); 
     chassis.calibrate(); 
+
+    // red alliance - true, blue alliance - false
+    intake.calibrate(true);
 }
 
 void disabled() {}
@@ -102,15 +105,22 @@ void autonomous() {
 
 
 void opcontrol() {
+    intake.colorSortActive = false;
     while (true) {
         int vert = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int horz = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
         chassis.arcade(vert, horz);
+
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtake_block(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
         else { intake.stop_intake(); }
 
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            if (intake.colorSortActive) { intake.colorSortActive = false; } 
+            else { intake.colorSortActive = true; }
+        }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             matchload.matchload_change();
         }

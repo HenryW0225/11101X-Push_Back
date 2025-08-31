@@ -7,6 +7,9 @@ class Intake {
         //constructor
         Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut intakePneumatic);
 
+        //initialize
+        void calibrate(bool red);
+
         //intake Motors
         pros::Motor bottomIntakeMotors;
         pros::Motor topIntakeMotors;
@@ -34,9 +37,25 @@ class Intake {
     
         void intake_control();
 
-        void color_sort(bool red);
+        //color sort functions
+
+        void spit_out();
+        
+        bool color_detected(bool red);
+
+        void red_color_sort();
+
+        static int red_color_sort_task();
+
+        void blue_color_sort();
+
+        static int blue_color_sort_task();
 
         //intake pneumatic functions
+
         void intakePneumatic_v(int value);
 
+        //intake variables
+
+        bool colorSortActive = true;
 };
