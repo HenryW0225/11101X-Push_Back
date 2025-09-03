@@ -38,6 +38,8 @@
 
 #include "lemlib/api.hpp"
 
+#include "autons.h"
+
 /**
  * You should add more #includes here
  */
