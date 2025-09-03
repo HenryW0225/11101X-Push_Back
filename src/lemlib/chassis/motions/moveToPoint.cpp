@@ -4,6 +4,7 @@
 #include "lemlib/timer.hpp"
 #include "lemlib/util.hpp"
 #include "pros/misc.hpp"
+#include "main.h"
 
 void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointParams params, bool async) {
     params.earlyExitRange = fabs(params.earlyExitRange);
@@ -128,4 +129,14 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
     // set distTraveled to -1 to indicate that the function has finished
     distTraveled = -1;
     this->endMotion();
+
+    // print out ending position
+    /*const Pose pose = getPose(true, true);
+    controller.set_text(0, 0, "Pose X: %f", pose.x);
+    controller.set_text(1, 0, "Pose Y: %f", pose.y);
+
+    pros::lcd::print(0, "Pose X: %f", pose.x);
+    pros::lcd::print(1, "Pose Y: %f", pose.y);
+
+    //cout << pose.x << " " << pose.y << " " << radToDeg(pose.theta) << endl;*/
 }

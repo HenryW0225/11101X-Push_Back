@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "LemLib test",
+    "project_name": "odom test",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -81,7 +81,9 @@
         "version": "4.2.1"
       }
     },
-    "upload_options": {},
+    "upload_options": {
+      "slot": 2
+    },
     "use_early_access": false
   }
 }
