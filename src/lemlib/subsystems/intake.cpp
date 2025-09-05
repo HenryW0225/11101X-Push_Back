@@ -7,7 +7,7 @@ Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros
       colorSensor(colorSensor),
       intakePneumatic(intakePneumatic) {}
       
-
+ 
 void Intake::calibrate(bool red) {
     colorSortActive = true;
     intakePneumatic_v(1);

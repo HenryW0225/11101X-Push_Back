@@ -2,24 +2,23 @@
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup leftMotors({-9, -19, -20}, pros::MotorGearset::blue); 
-pros::MotorGroup rightMotors({11, 13, 14}, pros::MotorGearset::blue); 
-pros::Motor bottomIntakeMotors(12, pros::MotorGearset::blue);
-pros::Motor topIntakeMotors(18, pros::MotorGearset::blue);
+pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue); 
+pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue); 
+pros::Motor bottomIntakeMotors(9, pros::MotorGearset::blue);
+pros::Motor topIntakeMotors(2, pros::MotorGearset::blue);
 
 pros::adi::DigitalOut matchLoadPneumatic('h');
 pros::adi::DigitalOut intakePneumatic('a');
 
-
-pros::Imu imu(4);
+pros::Imu imu(17);
 
 pros::Optical colorSensor(1);
 
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontalEnc(17);
+pros::Rotation horizontalEnc(14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation verticalEnc(2);
+pros::Rotation verticalEnc(15);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
 lemlib::TrackingWheel horizontal(&horizontalEnc, 1.99, 5.013);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
