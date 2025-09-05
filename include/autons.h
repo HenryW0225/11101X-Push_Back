@@ -1,4 +1,4 @@
-#include "main.h"
+/*#include "main.h"
 
 //constants
 
@@ -15,4 +15,4 @@ void elimRight();
 void soloWinPoint();
 
 //skills
-void skills();
+void skills();*/

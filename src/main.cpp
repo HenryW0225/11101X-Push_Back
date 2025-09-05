@@ -101,7 +101,7 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
-    odomTest();
+    //odomTest();
 }
 
 
