@@ -1,4 +1,5 @@
-/*#include "main.cpp"
+#pragma once
+#include "main.cpp"
 
 void odomTest() {
     chassis.setPose(22, 24, 0);
@@ -10,4 +11,4 @@ void qualLeft();
 void qualRight();
 void elimLeft();
 void elimRight();
-void soloWinPoint();*/
+void soloWinPoint();

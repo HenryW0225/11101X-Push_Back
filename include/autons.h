@@ -1,11 +1,7 @@
-/*#include "main.h"
-
 //constants
-
 
 //test autons
 void odomTest();
-
 
 //match autons
 void qualLeft();
@@ -15,4 +11,4 @@ void elimRight();
 void soloWinPoint();
 
 //skills
-void skills();*/
+void skills();

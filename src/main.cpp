@@ -101,7 +101,7 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
-    //odomTest();
+    odomTest();
 }
 
 
@@ -115,6 +115,7 @@ void opcontrol() {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtake_block(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.score_middle_goal(); }
         else { intake.stop_intake(); }
 
 
