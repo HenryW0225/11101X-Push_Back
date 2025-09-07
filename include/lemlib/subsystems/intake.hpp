@@ -29,8 +29,6 @@ class Intake {
 
         void outtake_block();
 
-        void score_middle_goal();
-
         void score_high_goal();
 
         void stop_intake();
@@ -55,7 +53,7 @@ class Intake {
 
         void intakePneumatic_v(int value);
 
-        void checkPneumatic();
+        void intakePneumatic_change();
 
         //intake variables
 

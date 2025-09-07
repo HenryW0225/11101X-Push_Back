@@ -1,4 +1,4 @@
-//constants
+/*//constants
 
 //test autons
 void odomTest();
@@ -11,4 +11,4 @@ void elimRight();
 void soloWinPoint();
 
 //skills
-void skills();
+void skills();*/

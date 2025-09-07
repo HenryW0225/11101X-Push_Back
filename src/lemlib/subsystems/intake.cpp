@@ -10,10 +10,10 @@ Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros
  
 void Intake::calibrate(bool red) {
     colorSortActive = true;
-    intakePneumatic_v(1);
+    intakePneumatic_v(0);
     intakePneumaticActive = true;
     topIntakeMotors.set_brake_mode(MOTOR_BRAKE_HOLD);
-    if (red) { red_color_sort(); }
+    //if (red) { red_color_sort(); }
     //else { blue_color_sort(); }
 }
 
@@ -29,48 +29,39 @@ void Intake::intakePneumatic_v(int value) {
     intakePneumatic.set_value(value);
 }
 
-void Intake::checkPneumatic() {
-    if (!intakePneumaticActive) {
-        intakePneumatic_v(1);
-        intakePneumaticActive = true;
-    }
-}
 void Intake::intake_block() {
-    checkPneumatic();
     move_bottom_intake(600);
 }
 
 void Intake::outtake_block() {
-    checkPneumatic();
     move_bottom_intake(-600);
     move_top_intake(600);
 }
 
-void Intake::score_middle_goal() {
-    if (intakePneumaticActive) {
-        intakePneumatic_v(0);
-        intakePneumaticActive = false;
-    }
-    move_bottom_intake(600);
-    move_top_intake(600);
-}
-
 void Intake::score_high_goal() {
-    checkPneumatic();
     move_bottom_intake(600);
     move_top_intake(-600);
 }
 
 void Intake::stop_intake() {
-    checkPneumatic();
     move_bottom_intake(0);
     move_top_intake(0);
 }
 
 void Intake::spit_out() {
-    checkPneumatic();
     move_bottom_intake(600);
     move_top_intake(600);
+}
+
+void Intake::intakePneumatic_change() {
+    if (intakePneumaticActive) {
+        intakePneumatic_v(1);
+        intakePneumaticActive = false;
+    }
+    else {
+        intakePneumatic_v(0);
+        intakePneumaticActive = true;
+    }
 }
 
 bool Intake::color_detected(bool red) {

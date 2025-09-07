@@ -1,3 +1,4 @@
+#pragma once
 #include "main.h"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -5,10 +6,10 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue); 
 pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue); 
 pros::Motor bottomIntakeMotors(9, pros::MotorGearset::blue);
-pros::Motor topIntakeMotors(2, pros::MotorGearset::blue);
+pros::Motor topIntakeMotors(7, pros::MotorGearset::blue);
 
-pros::adi::DigitalOut matchLoadPneumatic('h');
-pros::adi::DigitalOut intakePneumatic('a');
+pros::adi::DigitalOut matchLoadPneumatic('a');
+pros::adi::DigitalOut intakePneumatic('b');
 
 pros::Imu imu(17);
 
@@ -45,7 +46,7 @@ lemlib::ControllerSettings linearController(4.5, // (kP)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.8, // (kP)
+lemlib::ControllerSettings angularController(1.9, // (kP)
                                              0, // (kI)
                                              12.5, // (kD)
                                              3, // anti windup
@@ -99,9 +100,114 @@ void competition_initialize() {}
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 
+//autons
+void odomTest() {
+    /*chassis.turnToPoint(24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, -24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(-24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, 24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, -24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(-24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, 24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, -24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(-24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, 24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, -24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(-24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, 24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, -24, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(-24, 0, 5000);
+    pros::delay(250);
+    chassis.turnToPoint(0, 24, 5000);
+    pros::delay(250);*/
+
+    /*chassis.moveToPoint(0, 24, 5000, {.maxSpeed = 67});
+    chassis.turnToPoint(24, 24, 5000, {.maxSpeed = 67});
+    chassis.moveToPoint(24, 24, 5000, {.maxSpeed = 67});
+    //chassis.moveToPoint(0, 48, 5000, {.forwards = false}); 
+    //chassis.turnToPoint(0, 96, 5000);
+    //chassis.moveToPoint(0, 0, 5000, {.forwards = false});
+    chassis.turnToPoint(24, 0, 5000, {.maxSpeed = 67});
+    chassis.moveToPoint(24, 0, 5000, {.maxSpeed = 67});
+    chassis.turnToPoint(0, 0, 5000, {.maxSpeed = 67});
+    chassis.moveToPoint(0, 0, 5000, {.maxSpeed = 67});
+    chassis.turnToPoint(0, 24, 5000, {.maxSpeed = 67});*/
+    chassis.moveToPose(24, 24, 90, 5000, {.lead = 0.3});
+}
+
+void leftElim() {
+    chassis.setPose(9, 1.5, 0);
+    intake.intake_block();
+    chassis.moveToPoint(0, 26, 5000, {.maxSpeed = 100});
+    pros::delay(500);
+    matchload.matchload_v(1);
+    pros::delay(150);
+    chassis.moveToPoint(-17.75, 41, 5000, {.maxSpeed = 80});
+    pros::delay(150);
+    matchload.matchload_v(0);
+    pros::delay(350);
+    matchload.matchload_v(1);
+    pros::delay(200);
+    chassis.moveToPoint(-12, 8, 5000, {.forwards = false});
+    chassis.moveToPoint(-27, 4, 1000, {.forwards = false});
+    chassis.turnToPoint(-25.5, -24, 1000);
+    chassis.moveToPoint(-27, 24, 1000, {.forwards = false});
+    pros::delay(400);
+    intake.outtake_block();
+    pros::delay(100);
+    intake.score_high_goal();
+    pros::delay(2000);
+    //chassis.turnToPoint(-24, 24, 1000);
+    intake.stop_intake();
+    intake.intake_block();
+    chassis.moveToPoint(-25, -16, 1250, {.maxSpeed = 70});
+    pros::delay(1650);
+    chassis.moveToPoint(-26, 24, 5000, {.forwards = false});
+    pros::delay(1000);
+    intake.score_high_goal();
+    pros::delay(1250);
+    chassis.moveToPoint(-25, 16, 1000);
+    chassis.moveToPoint(-25, 24, 1000, {.forwards = false});
+    /*matchload.matchload_v(0);
+    chassis.moveToPoint(24, 12, 5000);
+    chassis.moveToPoint(24, 18, 5000, {.forwards = false});*/
+}
+
+
+
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
-    odomTest();
+    //odomTest();
+    leftElim();
+    /*chassis.moveToPoint(0, 48, 5000);
+    //pros::delay(500);
+    chassis.turnToPoint(48, 48, 5000);
+    chassis.moveToPoint(48, 48, 5000);
+    chassis.moveToPoint(0, 48, 5000, {.forwards = false}); 
+    chassis.turnToPoint(0, 96, 5000);
+    chassis.moveToPoint(0, 0, 5000, {.forwards = false});*/
 }
 
 
@@ -115,7 +221,6 @@ void opcontrol() {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.score_high_goal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtake_block(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intake_block(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.score_middle_goal(); }
         else { intake.stop_intake(); }
 
 
@@ -124,10 +229,17 @@ void opcontrol() {
             else { intake.colorSortActive = true; }
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             matchload.matchload_change();
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+            intake.intakePneumatic_change();
         }
 
         pros::delay(10);
     }
 }
+
+
+
