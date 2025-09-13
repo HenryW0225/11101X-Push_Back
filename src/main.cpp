@@ -19,7 +19,7 @@ pros::Optical colorSensor(1);
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontalEnc(14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation verticalEnc(15);
+pros::Rotation verticalEnc(4);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
 lemlib::TrackingWheel horizontal(&horizontalEnc, 1.99, 5.013);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
@@ -202,8 +202,8 @@ void blueSWP() {
     matchload.matchload_v(1);
     chassis.turnToPoint(-24, 24, 5000, {.minSpeed = 5, .earlyExitRange = 1});
     intake.intake_block();
-    chassis.moveToPoint(-12, 23, 1100, {.maxSpeed = 65, .minSpeed = 45});
-    pros::delay(1300);
+    chassis.moveToPoint(-12, 23.5, 1120, {.maxSpeed = 65, .minSpeed = 55});
+    pros::delay(1220);
     chassis.moveToPoint(20.25, 23, 5000, {.forwards = false, .maxSpeed = 110});
     pros::delay(700);
     intake.score_high_goal();
@@ -214,32 +214,41 @@ void blueSWP() {
     intake.intake_block();
     matchload.matchload_v(0);
     chassis.moveToPoint(24, 0, 1250);
-    pros::delay(550);
-    matchload.matchload_v(1);
     pros::delay(200);
-    chassis.turnToPoint(0, 30.25, 5000);
-    chassis.moveToPoint(38, -19, 1000, {.forwards = false, .maxSpeed = 50});
+    //matchload.matchload_v(1);
+    chassis.turnToPoint(0, 30.25, 1500, {.minSpeed = 5});
+    chassis.moveToPoint(37.5, -17, 1000, {.forwards = false, .maxSpeed = 50});
     intake.outtake_block();
-    pros::delay(300);
+    pros::delay(200);
     intake.stop_intake();
     intake.intakePneumatic_v(1);
     pros::delay(100);
     intake.score_high_goal();
     pros::delay(1250);
     intake.stop_intake();
-    //matchload.matchload_v(0);
-    chassis.moveToPoint(14, -24, 1000);
+    matchload.matchload_v(0);
+    chassis.moveToPoint(24, 0, 1800, {.minSpeed = 10, .earlyExitRange = 1});
+    intake.outtake_block();
+    pros::delay(100);
     intake.intakePneumatic_v(0);
     pros::delay(100);
+    intake.stop_intake();
     intake.intake_block();
-    chassis.moveToPoint(-9, -68, 5000);
-    //matchload.matchload_v(1);
-    chassis.turnToPoint(-24, -68, 5000);
-    chassis.moveToPoint(-14, -68, 1000, {.maxSpeed = 85, .minSpeed = 65});
-    pros::delay(1150);
-    chassis.moveToPoint(20.25, -70, 5000, {.forwards = false, .maxSpeed = 110});
-    pros::delay(700);
+    chassis.turnToPoint(19, -44, 2000, {.maxSpeed = 80, .minSpeed = 5});
+    chassis.moveToPoint(19, -44, 2000, {.minSpeed = 10, .earlyExitRange = 1});
+    pros::delay(720);
+    matchload.matchload_v(1);
+    chassis.turnToPoint(0, -69, 2000, {.minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPoint(0, -69, 3000, {.minSpeed = 10, .earlyExitRange = 1});
+    chassis.turnToPoint(-20, -70.5, 2000, {.minSpeed = 10, .earlyExitRange = 1});
+    matchload.matchload_v(0);
+    chassis.moveToPoint(20.25, -70.5, 5000, {.forwards = false, .maxSpeed = 110, .minSpeed = 10, .earlyExitRange = 1});
+    pros::delay(150);
+    intake.outtake_block();
+    pros::delay(200);
     intake.score_high_goal();
+    pros::delay(1000);
+    chassis.moveToPoint(17, -70.5, 1000, {.minSpeed = 10, .earlyExitRange = 1});
 
 
 }
