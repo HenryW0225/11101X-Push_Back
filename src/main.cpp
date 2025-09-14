@@ -327,7 +327,22 @@ void simpleQual() {
 }
 
 void skills() {
-
+    chassis.setPose(2, -7.75, 0);
+    chassis.moveToPoint(2, 21, 5000,{.minSpeed = 5, .earlyExitRange = 1});
+    matchload.matchload_v(1);
+    chassis.turnToPoint(24, 23, 5000, {.minSpeed = 5, .earlyExitRange = 1});
+    intake.intake_block();
+    chassis.moveToPoint(11.5, 23, 1120, {.maxSpeed = 65, .minSpeed = 55});
+    pros::delay(2000);
+    chassis.moveToPoint(-20.25, 23, 1500, {.forwards = false, .maxSpeed = 110});
+    pros::delay(1500);
+    intake.score_high_goal();
+    pros::delay(7500);
+    chassis.moveToPoint(-10, 23, 5000, {.minSpeed = 10, .earlyExitRange = 1});
+    chassis.turnToPoint(12, 0, 5000);
+    chassis.moveToPoint(12, 0, 5000);
+    chassis.turnToPoint(12, -36, 5000);
+    chassis.moveToPoint(12, -36, 15000, {.maxSpeed = 65});
 }
 
 
