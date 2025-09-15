@@ -28,6 +28,8 @@ class Intake {
         void intake_block();
 
         void outtake_block();
+        
+        void score_middle_goal();
 
         void score_high_goal();
 

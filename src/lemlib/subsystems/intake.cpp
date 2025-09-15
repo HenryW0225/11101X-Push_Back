@@ -31,11 +31,17 @@ void Intake::intakePneumatic_v(int value) {
 
 void Intake::intake_block() {
     move_bottom_intake(600);
+    move_top_intake(0);
 }
 
 void Intake::outtake_block() {
     move_bottom_intake(-600);
     move_top_intake(600);
+}
+
+void Intake::score_middle_goal() {
+    move_bottom_intake(200);
+    move_top_intake(-200);
 }
 
 void Intake::score_high_goal() {
