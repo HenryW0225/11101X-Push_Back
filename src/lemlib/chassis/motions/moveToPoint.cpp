@@ -130,13 +130,4 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
     distTraveled = -1;
     this->endMotion();
 
-    // print out ending position
-    /*const Pose pose = getPose(true, true);
-    controller.set_text(0, 0, "Pose X: %f", pose.x);
-    controller.set_text(1, 0, "Pose Y: %f", pose.y);
-
-    pros::lcd::print(0, "Pose X: %f", pose.x);
-    pros::lcd::print(1, "Pose Y: %f", pose.y);
-
-    //cout << pose.x << " " << pose.y << " " << radToDeg(pose.theta) << endl;*/
 }

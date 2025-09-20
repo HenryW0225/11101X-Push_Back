@@ -21,9 +21,9 @@ pros::Rotation horizontalEnc(14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
 pros::Rotation verticalEnc(4);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 1.99, 5.013);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, 5.13);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&verticalEnc, 1.99, 0);
+lemlib::TrackingWheel vertical(&verticalEnc, 2, 0.5);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
@@ -102,6 +102,13 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 //autons
 void odomTest() {
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(0, 96, 10000, {.maxSpeed = 30});
+    /*chassis.turnToHeading(90, 5000);
+    chassis.turnToHeading(180, 5000);
+    chassis.turnToHeading(270, 5000);
+    chassis.turnToHeading(0, 5000);*/
+    
     /*chassis.turnToPoint(24, 0, 5000);
     pros::delay(250);
     chassis.turnToPoint(0, -24, 5000);
@@ -154,7 +161,7 @@ void odomTest() {
     chassis.turnToPoint(0, 0, 5000, {.maxSpeed = 67});
     chassis.moveToPoint(0, 0, 5000, {.maxSpeed = 67});
     chassis.turnToPoint(0, 24, 5000, {.maxSpeed = 67});*/
-    chassis.moveToPose(24, 24, 90, 5000, {.lead = 0.3});
+    //chassis.moveToPose(24, 24, 90, 5000, {.lead = 0.3});
 }
 
 void leftElim() {
@@ -347,10 +354,10 @@ void skills() {
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
-    //odomTest();
+    odomTest();
     //leftElim();
     //SWP();
-    rightElim();
+    //rightElim();
     //simpleQual();
     //skills();
 
