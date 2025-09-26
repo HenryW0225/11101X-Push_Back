@@ -1,20 +1,38 @@
 #include "main.h"
 
-Matchload::Matchload(pros::adi::DigitalOut matchloadpneumatic)
-    : matchloadpneumatic(matchloadpneumatic) {}
+Matchload::Matchload(pros::adi::DigitalOut matchLoadPneumatic)
+    : matchLoadPneumatic(matchLoadPneumatic) {}
 
-void Matchload::matchload_v(int value) {
-    matchloadpneumatic.set_value(value);
+void Matchload::matchloadV(int value) {
+    matchLoadPneumatic.set_value(value);
 }
 
-void Matchload::matchload_change() {
-    if (matchload_out) {
-        matchload_v(0);
-        matchload_out = false;
+void Matchload::matchloadChange() {
+    if (matchloadOut) {
+        matchloadV(0);
+        matchloadOut = false;
     }
     else {
-        matchload_v(1);
-        matchload_out = true;
+        matchloadV(1);
+        matchloadOut = true;
+    }
+}
+
+Wing::Wing(pros::adi::DigitalOut wingPneumatic)
+    : wingPneumatic(wingPneumatic) {}
+
+void Wing::wingV(int value) {
+    wingPneumatic.set_value(value);
+}
+
+void Wing::wingChange() {
+    if (wingUp) {
+        wingV(0);
+        wingUp = false;
+    }
+    else {
+        wingV(1);
+        wingUp = true;
     }
 }
 

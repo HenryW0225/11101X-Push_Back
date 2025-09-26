@@ -5,15 +5,31 @@
 class Matchload {
     public:
         //constructor
-        Matchload(pros::adi::DigitalOut matchloadpneumatic);
+        Matchload(pros::adi::DigitalOut matchLoadPneumatic);
 
         //matchload pneumatic
-        pros::adi::DigitalOut matchloadpneumatic;
+        pros::adi::DigitalOut matchLoadPneumatic;
 
         //matchload Functions
-        void matchload_v(int value);
-        void matchload_change();
+        void matchloadV(int value);
+        void matchloadChange();
  
         //matchload variables
-        bool matchload_out = false;
+        bool matchloadOut = false;
+};
+
+class Wing {
+    public:
+        //constructor
+        Wing(pros::adi::DigitalOut wingPneumatic);
+
+        //wing pneumatic
+        pros::adi::DigitalOut wingPneumatic;
+
+        //wing Functions
+        void wingV(int value);
+        void wingChange();
+ 
+        //matchload variables
+        bool wingUp = false;
 };

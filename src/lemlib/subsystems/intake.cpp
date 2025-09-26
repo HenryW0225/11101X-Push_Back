@@ -1,76 +1,74 @@
 #include "main.h"
 
-
 Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut intakePneumatic)
     : bottomIntakeMotors(bottomIntakeMotors),
       topIntakeMotors(topIntakeMotors),
       colorSensor(colorSensor),
       intakePneumatic(intakePneumatic) {}
       
- 
 void Intake::calibrate(bool red) {
     colorSortActive = true;
-    intakePneumatic_v(0);
+    intakePneumaticV(0);
     intakePneumaticActive = true;
     topIntakeMotors.set_brake_mode(MOTOR_BRAKE_HOLD);
-    //if (red) { red_color_sort(); }
-    //else { blue_color_sort(); }
+    //if (red) { redColorSort(); }
+    //else { blueColorSort(); }
 }
 
-void Intake::move_bottom_intake(double velocity){
+void Intake::moveBottomIntake(double velocity){
     bottomIntakeMotors.move_velocity(velocity);
 }
 
-void Intake::move_top_intake(double velocity){
+void Intake::moveTopIntake(double velocity){
     topIntakeMotors.move_velocity(velocity);
 }
 
-void Intake::intakePneumatic_v(int value) {
+void Intake::intakePneumaticV(int value) {
     intakePneumatic.set_value(value);
 }
 
-void Intake::intake_block() {
-    move_bottom_intake(600);
-    move_top_intake(0);
+void Intake::intakeBlock() {
+    moveBottomIntake(600);
+    moveTopIntake(0);
 }
 
-void Intake::outtake_block() {
-    move_bottom_intake(-600);
-    move_top_intake(600);
+void Intake::outtakeBlock() {
+    moveBottomIntake(-600);
+    moveTopIntake(600);
 }
 
-void Intake::score_middle_goal() {
-    move_bottom_intake(200);
-    move_top_intake(-200);
+void Intake::scoreMiddleGoal() {
+    moveBottomIntake(200);
+    moveTopIntake(-200);
 }
 
-void Intake::score_high_goal() {
-    move_bottom_intake(600);
-    move_top_intake(-600);
+void Intake::scoreHighGoal() {
+    moveBottomIntake(600);
+    moveTopIntake(-600);
 }
 
-void Intake::stop_intake() {
-    move_bottom_intake(0);
-    move_top_intake(0);
+void Intake::stopIntake() {
+    moveBottomIntake(0);
+    moveTopIntake(0);
 }
 
-void Intake::spit_out() {
-    move_bottom_intake(600);
-    move_top_intake(600);
+void Intake::spitOut() {
+    moveBottomIntake(600);
+    moveTopIntake(600);
 }
 
-void Intake::intakePneumatic_change() {
+void Intake::intakePneumaticChange() {
     if (intakePneumaticActive) {
-        intakePneumatic_v(1);
+        intakePneumaticV(1);
         intakePneumaticActive = false;
     }
     else {
-        intakePneumatic_v(0);
+        intakePneumaticV(0);
         intakePneumaticActive = true;
     }
 }
 
-bool Intake::color_detected(bool red) {
+bool Intake::colorDetected(bool red) {
     if (red) {
         // red alliance - detecting against blue
         if ((colorSensor.get_hue() >= 350 || colorSensor.get_hue() <= 10) 
@@ -90,38 +88,34 @@ bool Intake::color_detected(bool red) {
     return false;
 }
 
-void Intake::red_color_sort() {
+void Intake::redColorSort() {
     colorSensor.set_led_pwm(100);
     colorSensor.set_integration_time(5);
     while (colorSortActive) {
-        if (color_detected(true)) {
-            while (color_detected(true)) {
-                spit_out();
+        if (colorDetected(true)) {
+            while (colorDetected(true)) {
+                spitOut();
                 pros::delay(10);
             } 
             pros::delay(250);
-            stop_intake();
+            stopIntake();
         } 
         pros::delay(10);
     }
 }
 
-
-
-void Intake::blue_color_sort() {
+void Intake::blueColorSort() {
     colorSensor.set_led_pwm(100);
     colorSensor.set_integration_time(5);
     while (colorSortActive) {
-        if (color_detected(false)) {
-            while (color_detected(false)) {
-                spit_out();
+        if (colorDetected(false)) {
+            while (colorDetected(false)) {
+                spitOut();
                 pros::delay(10);
             } 
             pros::delay(250);
-            stop_intake();
+            stopIntake();
         } 
         pros::delay(10);
     }
 }
-
-

@@ -21,41 +21,41 @@ class Intake {
         pros::adi::DigitalOut intakePneumatic;
 
         //intake Functions
-        void move_bottom_intake(double velocity);
+        void moveBottomIntake(double velocity);
 
-        void move_top_intake(double velocity);
+        void moveTopIntake(double velocity);
 
-        void intake_block();
+        void intakeBlock();
 
-        void outtake_block();
+        void outtakeBlock();
         
-        void score_middle_goal();
+        void scoreMiddleGoal();
 
-        void score_high_goal();
+        void scoreHighGoal();
 
-        void stop_intake();
+        void stopIntake();
     
-        void intake_control();
+        void intakeControl();
 
         //color sort functions
 
-        void spit_out();
+        void spitOut();
         
-        bool color_detected(bool red);
+        bool colorDetected(bool red);
 
-        void red_color_sort();
+        void redColorSort();
 
-        static int red_color_sort_task();
+        static int redColorSortTask();
 
-        void blue_color_sort();
+        void blueColorSort();
 
-        static int blue_color_sort_task();
+        static int blueColorSortTask();
 
         //intake pneumatic functions
 
-        void intakePneumatic_v(int value);
+        void intakePneumaticV(int value);
 
-        void intakePneumatic_change();
+        void intakePneumaticChange();
 
         //intake variables
 
