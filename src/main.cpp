@@ -5,8 +5,8 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue); 
 pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue); 
-pros::Motor bottomIntakeMotors(9, pros::MotorGearset::blue);
-pros::Motor topIntakeMotors(7, pros::MotorGearset::blue);
+pros::Motor bottomIntakeMotors(10, pros::MotorGearset::blue);
+pros::Motor topIntakeMotors(15, pros::MotorGearset::blue);
 
 pros::adi::DigitalOut matchLoadPneumatic('a');
 pros::adi::DigitalOut intakePneumatic('b');
