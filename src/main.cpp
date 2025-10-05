@@ -8,9 +8,10 @@ pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue);
 pros::Motor bottomIntakeMotors(10, pros::MotorGearset::blue);
 pros::Motor topIntakeMotors(15, pros::MotorGearset::blue);
 
-pros::adi::DigitalOut matchLoadPneumatic('a');
-pros::adi::DigitalOut intakePneumatic('b');
-pros::adi::DigitalOut wingPneumatic('c');
+pros::adi::DigitalOut matchLoadPneumatic('g');
+pros::adi::DigitalOut intakePneumatic('h');
+pros::adi::DigitalOut wingPneumatic('e');
+pros::adi::DigitalOut parkPneumatic('f');
 
 pros::Imu imu(17);
 
@@ -85,6 +86,8 @@ Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic)
 Matchload matchload(matchLoadPneumatic);
 
 Wing wing(wingPneumatic);
+
+Park park(parkPneumatic);
 
 void initialize() {
     pros::lcd::initialize(); 
@@ -309,8 +312,16 @@ void opcontrol() {
             matchload.matchloadChange();
         }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake.intakePneumaticChange();
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+            wing.wingChange();
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+            park.parkChange();
         }
 
         pros::delay(10);
