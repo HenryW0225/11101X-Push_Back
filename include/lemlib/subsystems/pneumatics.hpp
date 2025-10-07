@@ -13,6 +13,7 @@ class Matchload {
         //matchload Functions
         void matchloadV(int value);
         void matchloadChange();
+        void calibrate();
  
         //matchload variables
         bool matchloadOut = false;
@@ -29,6 +30,7 @@ class Wing {
         //wing Functions
         void wingV(int value);
         void wingChange();
+        void calibrate();
  
         //wing variables
         bool wingUp = false;
@@ -45,6 +47,7 @@ class Park {
         //park Functions
         void parkV(int value);
         void parkChange();
+        void calibrate();
  
         //parking variables
         bool parkDown = false;

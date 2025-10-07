@@ -18,6 +18,10 @@ void Matchload::matchloadChange() {
     }
 }
 
+void Matchload::calibrate() {
+    matchloadV(0);
+}
+
 Wing::Wing(pros::adi::DigitalOut wingPneumatic)
     : wingPneumatic(wingPneumatic) {}
 
@@ -27,13 +31,17 @@ void Wing::wingV(int value) {
 
 void Wing::wingChange() {
     if (wingUp) {
-        wingV(1);
+        wingV(0);
         wingUp = false;
     }
     else {
-        wingV(0);
+        wingV(1);
         wingUp = true;
     }
+}
+
+void Wing::calibrate() {
+    wingV(0);
 }
 
 Park::Park(pros::adi::DigitalOut parkPneumatic)
@@ -45,11 +53,16 @@ void Park::parkV(int value) {
 
 void Park::parkChange() {
     if (parkDown) {
-        parkV(1);
+        parkV(0);
         parkDown = false;
     }
     else {
-        parkV(0);
+        parkV(1);
         parkDown = true;
     }
 }
+
+void Park::calibrate() {
+    parkV(0);
+}
+

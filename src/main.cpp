@@ -95,6 +95,9 @@ void initialize() {
 
     // red alliance - true, blue alliance - false
     intake.calibrate(true);
+    matchload.calibrate();
+    wing.calibrate();
+    park.calibrate();
 }
 
 void disabled() {}
