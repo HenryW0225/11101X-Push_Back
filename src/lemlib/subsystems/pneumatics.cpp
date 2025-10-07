@@ -27,11 +27,11 @@ void Wing::wingV(int value) {
 
 void Wing::wingChange() {
     if (wingUp) {
-        wingV(0);
+        wingV(1);
         wingUp = false;
     }
     else {
-        wingV(1);
+        wingV(0);
         wingUp = true;
     }
 }
@@ -45,11 +45,11 @@ void Park::parkV(int value) {
 
 void Park::parkChange() {
     if (parkDown) {
-        parkV(0);
+        parkV(1);
         parkDown = false;
     }
     else {
-        parkV(1);
+        parkV(0);
         parkDown = true;
     }
 }

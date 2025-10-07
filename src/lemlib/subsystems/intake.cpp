@@ -8,7 +8,7 @@ Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros
       
 void Intake::calibrate(bool red) {
     colorSortActive = true;
-    intakePneumaticV(0);
+    intakePneumaticV(1);
     intakePneumaticActive = true;
     topIntakeMotors.set_brake_mode(MOTOR_BRAKE_HOLD);
     //if (red) { redColorSort(); }
@@ -59,11 +59,11 @@ void Intake::spitOut() {
 
 void Intake::intakePneumaticChange() {
     if (intakePneumaticActive) {
-        intakePneumaticV(1);
+        intakePneumaticV(0);
         intakePneumaticActive = false;
     }
     else {
-        intakePneumaticV(0);
+        intakePneumaticV(1);
         intakePneumaticActive = true;
     }
 }
