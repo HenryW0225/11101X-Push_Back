@@ -181,3 +181,15 @@ void lemlib::init() {
         }};
     }
 }
+
+double lemlib::verticalDistance() {
+    if (odomSensors.vertical1 != nullptr) return odomSensors.vertical1->getDistanceTraveled();
+    if (odomSensors.vertical2 != nullptr) return odomSensors.vertical2->getDistanceTraveled();
+    return 0;
+}
+
+double lemlib::horizontalDistance() {
+    if (odomSensors.horizontal1 != nullptr) return odomSensors.horizontal1->getDistanceTraveled();
+    if (odomSensors.horizontal2 != nullptr) return odomSensors.horizontal2->getDistanceTraveled();
+    return 0;
+}

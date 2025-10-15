@@ -490,6 +490,8 @@ class Chassis {
          * chassis.turnToPoint(7.5, 7.5, 2000, {.minSpeed = 60, .earlyExitRange = 5});
          * @endcode
          */
+        
+        void odomConfiguration();
         void turnToPoint(float x, float y, int timeout, TurnToPointParams params = {}, bool async = true);
         /**
          * @brief Turn the chassis so it is facing the target heading

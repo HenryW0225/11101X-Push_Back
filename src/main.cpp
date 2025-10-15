@@ -20,11 +20,11 @@ pros::Optical colorSensor(1);
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontalEnc(14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation verticalEnc(4);
+pros::Rotation verticalEnc(-9);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, 5.13);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.15);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&verticalEnc, 2, 0.5);
+lemlib::TrackingWheel vertical(&verticalEnc, 2, 0.2);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 

@@ -159,3 +159,8 @@ void lemlib::Chassis::setBrakeMode(pros::motor_brake_mode_e mode) {
     drivetrain.leftMotors->set_brake_mode_all(mode);
     drivetrain.rightMotors->set_brake_mode_all(mode);
 }
+
+
+void lemlib::Chassis::odomConfiguration() {
+    
+}
