@@ -161,6 +161,17 @@ void lemlib::Chassis::setBrakeMode(pros::motor_brake_mode_e mode) {
 }
 
 
-void lemlib::Chassis::odomConfiguration() {
-    
-}
+/*void lemlib::Chassis::odomConfiguration() {
+    //drivetrain.leftMotors->set_brake_mode_all(MOTOR_BRAKE_HOLD);
+    //drivetrain.rightMotors->set_brake_mode_all(MOTOR_BRAKE_HOLD);
+    sensors.imu->reset();
+    while (sensors.imu->getheading() < 360) {
+        drivetrain.leftMotors->move(30);
+        drivetrain.rightMotors->move(-30);
+        pros::delay(10);
+    }
+    drivetrain.leftMotors->move(0);
+    drivetrain.rightMotors->move(0);
+    pros::delay(500);
+
+}*/
