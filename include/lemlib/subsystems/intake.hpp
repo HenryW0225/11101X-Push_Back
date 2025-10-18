@@ -37,6 +37,10 @@ class Intake {
     
         void intakeControl();
 
+        //intake jam functions
+
+        void intakeJam(bool async);
+
         //color sort functions
 
         void spitOut();
@@ -62,4 +66,8 @@ class Intake {
         bool colorSortActive = true;
         
         bool intakePneumaticActive = true;
+
+        bool driverControl = false;
+
+        double targetVelocity = 0;
 };

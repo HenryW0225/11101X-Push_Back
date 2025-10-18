@@ -17,6 +17,7 @@ void Intake::calibrate(bool red) {
 
 void Intake::moveBottomIntake(double velocity){
     bottomIntakeMotors.move_velocity(velocity);
+    targetVelocity = velocity;
 }
 
 void Intake::moveTopIntake(double velocity){
@@ -116,6 +117,28 @@ void Intake::blueColorSort() {
             pros::delay(250);
             stopIntake();
         } 
+        pros::delay(10);
+    }
+}
+
+
+void Intake::intakeJam(bool async) {
+    if (async) {
+        pros::Task task([&]() { intakeJam(false); });
+        return;
+    } 
+
+    while (!driverControl) {
+        if (targetVelocity > 0 && bottomIntakeMotors.get_actual_velocity() < 25) {
+            double bottomVelocity = bottomIntakeMotors.get_target_velocity();
+            double topVelocity = topIntakeMotors.get_target_velocity();
+            outtakeBlock();
+            pros::delay(1000);
+            bottomIntakeMotors.move_velocity(bottomVelocity);
+            targetVelocity = bottomVelocity;
+            topIntakeMotors.move_velocity(topVelocity);
+            pros::delay(500);
+        }
         pros::delay(10);
     }
 }
