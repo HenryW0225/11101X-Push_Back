@@ -68,6 +68,4 @@ class Intake {
         bool intakePneumaticActive = true;
 
         bool driverControl = false;
-
-        double targetVelocity = 0;
 };
