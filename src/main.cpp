@@ -18,38 +18,38 @@ pros::Imu imu(17);
 pros::Optical colorSensor(1);
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontalEnc(14);
+pros::Rotation horizontalEnc(-14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
 pros::Rotation verticalEnc(-9);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, 3.9);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.2);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.2);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
-                              11, // 11 inch track width
+                              10.95, // 11 inch track width
                               lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(5, // (kP)
+lemlib::ControllerSettings linearController(4.5, // (kP)
                                             0, // (kI)
                                             3, // (kD)
                                             3, //
                                             1, // small error range, in inches
-                                            500, // small error range timeout, in milliseconds
+                                            100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
-                                            1000, // large error range timeout, in milliseconds
+                                            500, // large error range timeout, in milliseconds
                                             20 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.75, // (kP)
+lemlib::ControllerSettings angularController(2, // (kP)
                                              0, // (kI)
-                                             12.5, // (kD)
+                                             15, // (kD)
                                              3, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -106,6 +106,15 @@ void competitionInitialize() {}
 
 // get a path used for pure pursuit
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
+
+
+
+void odomTest() {
+    chassis.setPose(0, 0, 0);
+    //chassis.turnToPoint(24, 0, 5000);
+    chassis.moveToPoint(0, 24, 5000);
+
+}
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);

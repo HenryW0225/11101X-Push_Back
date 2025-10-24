@@ -6,6 +6,18 @@
 #include "pros/misc.hpp"
 
 void lemlib::Chassis::turnToPoint(float x, float y, int timeout, TurnToPointParams params, bool async) {
+    /*drivetrain.leftMotors->move(10);
+    drivetrain.rightMotors->move(-10);
+    Pose pose = getPose();
+    while (pose.theta < 90) {
+        pros::delay(10);
+        pose = getPose();
+    }
+    drivetrain.leftMotors->move(0);
+    drivetrain.rightMotors->move(0);*/
+
+
+
     params.minSpeed = std::abs(params.minSpeed);
     this->requestMotionStart();
     // were all motions cancelled?

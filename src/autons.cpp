@@ -1,10 +1,10 @@
-#pragma once
+/*#pragma once
 #include "main.cpp"
 
 void odomTest() {
     chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, 24, 5000);
-    //chassis.turnToPoint(24, 24, 5000);
+    chassis.turnToPoint(24, 0, 5000);
+    //chassis.turnToPoint(24, 24, 5000);/
 }
 
 void simpleQual() {
@@ -177,4 +177,4 @@ void skills() {
     chassis.moveToPoint(20.25, 23, 1500, {.forwards = false, .maxSpeed = 110});
     pros::delay(5000);
     intake.scoreHighGoal();
-}
+}*/
