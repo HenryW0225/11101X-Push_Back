@@ -31,15 +31,38 @@ lemlib::Chassis::Chassis(Drivetrain drivetrain, ControllerSettings linearSetting
     : drivetrain(drivetrain),
       lateralSettings(linearSettings),
       angularSettings(angularSettings),
+      headingSettings(angularSettings), // Use angularSettings for heading when not specified
       sensors(sensors),
       throttleCurve(throttleCurve),
       steerCurve(steerCurve),
       lateralPID(linearSettings.kP, linearSettings.kI, linearSettings.kD, linearSettings.windupRange, true),
       angularPID(angularSettings.kP, angularSettings.kI, angularSettings.kD, angularSettings.windupRange, true),
+      headingPID(angularSettings.kP, angularSettings.kI, angularSettings.kD, angularSettings.windupRange, true), // Use angularSettings for heading
       lateralLargeExit(lateralSettings.largeError, lateralSettings.largeErrorTimeout),
       lateralSmallExit(lateralSettings.smallError, lateralSettings.smallErrorTimeout),
       angularLargeExit(angularSettings.largeError, angularSettings.largeErrorTimeout),
-      angularSmallExit(angularSettings.smallError, angularSettings.smallErrorTimeout) {}
+      angularSmallExit(angularSettings.smallError, angularSettings.smallErrorTimeout),
+      headingLargeExit(angularSettings.largeError, angularSettings.largeErrorTimeout), // Use angularSettings for heading exit conditions
+      headingSmallExit(angularSettings.smallError, angularSettings.smallErrorTimeout) {} // Use angularSettings for heading exit conditions
+
+lemlib::Chassis::Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
+                         OdomSensors sensors, DriveCurve* throttleCurve, DriveCurve* steerCurve)
+    : drivetrain(drivetrain),
+      lateralSettings(linearSettings),
+      angularSettings(angularSettings),
+      headingSettings(headingSettings),
+      sensors(sensors),
+      throttleCurve(throttleCurve),
+      steerCurve(steerCurve),
+      lateralPID(linearSettings.kP, linearSettings.kI, linearSettings.kD, linearSettings.windupRange, true),
+      angularPID(angularSettings.kP, angularSettings.kI, angularSettings.kD, angularSettings.windupRange, true),
+      headingPID(headingSettings.kP, headingSettings.kI, headingSettings.kD, headingSettings.windupRange, true),
+      lateralLargeExit(lateralSettings.largeError, lateralSettings.largeErrorTimeout),
+      lateralSmallExit(lateralSettings.smallError, lateralSettings.smallErrorTimeout),
+      angularLargeExit(angularSettings.largeError, angularSettings.largeErrorTimeout),
+      angularSmallExit(angularSettings.smallError, angularSettings.smallErrorTimeout),
+      headingLargeExit(headingSettings.largeError, headingSettings.largeErrorTimeout),
+      headingSmallExit(headingSettings.smallError, headingSettings.smallErrorTimeout) {}
 
 /**
  * @brief calibrate the IMU given a sensors struct

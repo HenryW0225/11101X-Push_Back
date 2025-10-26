@@ -309,7 +309,7 @@ extern ExpoDriveCurve defaultDriveCurve;
 class Chassis {
     public:
         /**
-         * @brief Chassis constructor
+         * @brief Chassis constructor (backward compatible)
          *
          * @param drivetrain drivetrain to be used for the chassis
          * @param lateralSettings settings for the lateral controller
@@ -321,6 +321,22 @@ class Chassis {
          * @example main.cpp
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings,
+                OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
+                DriveCurve* steerCurve = &defaultDriveCurve);
+        /**
+         * @brief Chassis constructor with separate heading settings
+         *
+         * @param drivetrain drivetrain to be used for the chassis
+         * @param lateralSettings settings for the lateral controller
+         * @param angularSettings settings for the angular controller
+         * @param headingSettings settings for the heading controller (used in drive functions)
+         * @param sensors sensors to be used for odometry
+         * @param throttleCurve curve applied to throttle input during driver control
+         * @param turnCurve curve applied to steer input during driver control
+         *
+         * @example main.cpp
+         */
+        Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
@@ -888,6 +904,13 @@ class Chassis {
          * @warning Do not interact with these unless you know what you are doing
          */
         PID angularPID;
+        /**
+         * PIDs are exposed so advanced users can implement things like gain scheduling
+         * Changes are immediate and will affect a motion in progress
+         *
+         * @warning Do not interact with these unless you know what you are doing
+         */
+        PID headingPID;
     protected:
         /**
          * @brief Indicates that this motion is queued and blocks current task until this motion reaches front of queue
@@ -905,6 +928,7 @@ class Chassis {
 
         ControllerSettings lateralSettings;
         ControllerSettings angularSettings;
+        ControllerSettings headingSettings;
         Drivetrain drivetrain;
         OdomSensors sensors;
         DriveCurve* throttleCurve;
@@ -914,6 +938,8 @@ class Chassis {
         ExitCondition lateralSmallExit;
         ExitCondition angularLargeExit;
         ExitCondition angularSmallExit;
+        ExitCondition headingLargeExit;
+        ExitCondition headingSmallExit;
     private:
         pros::Mutex mutex;
 };

@@ -98,7 +98,14 @@ void lemlib::update() {
     float heading = odomPose.theta;
     // calculate the heading using the horizontal tracking wheels
 
-    if (odomSensors.imu != nullptr) heading += deltaImu;
+    // apply Gyro Scale
+    //const float GYRO_SCALE = (360/356);
+    //deltaImu *= GYRO_SCALE;
+
+    if (odomSensors.imu != nullptr) {
+        heading += deltaImu;
+        //odomPose.theta = heading;
+    }
     else if (!odomSensors.vertical1->getType() && !odomSensors.vertical2->getType())
         heading -= (deltaVertical1 - deltaVertical2) /
                    (odomSensors.vertical1->getOffset() - odomSensors.vertical2->getOffset());

@@ -1,4 +1,3 @@
-#pragma once
 #include "main.h"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -35,10 +34,10 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(4.5, // (kP)
+lemlib::ControllerSettings linearController(3.7, // (kP)
                                             0, // (kI)
-                                            3, // (kD)
-                                            3, //
+                                            10, // (kD)
+                                            0, //
                                             1, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
@@ -47,16 +46,30 @@ lemlib::ControllerSettings linearController(4.5, // (kP)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(2, // (kP)
+lemlib::ControllerSettings angularController(1.9, // (kP)
                                              0, // (kI)
-                                             15, // (kD)
-                                             3, // anti windup
+                                             12.5, // (kD)
+                                             0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
                                              3, // large error range, in degrees
                                              500, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
+
+
+// heading motion controller
+lemlib::ControllerSettings headingController(1.25, // (kP) 2
+                                             0, // (kI)
+                                             20, // (kD) 20
+                                             0, // anti windup
+                                             1, // small error range, in degrees
+                                             100, // small error range timeout, in milliseconds
+                                             3, // large error range, in degrees
+                                             500, // large error range timeout, in milliseconds
+                                             0 // maximum acceleration (slew)
+);
+
 
 // sensors for odometry
 lemlib::OdomSensors sensors(&vertical, 
@@ -79,7 +92,7 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 );
 
 // create the chassis
-lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
+lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
 
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
 
@@ -110,14 +123,19 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 
 void odomTest() {
-    chassis.setPose(0, 0, 0);
-    //chassis.turnToPoint(24, 0, 5000);
-    chassis.moveToPoint(0, 24, 5000);
-
+    chassis.moveToPoint(0, 48, 5000);
+    chassis.turnToPoint(-48, 0, 5000);
+    chassis.moveToPoint(-48, 48, 5000);
+    chassis.turnToPoint(-48, 0, 5000);
+    chassis.moveToPoint(-48, 0, 5000);
+    chassis.turnToPoint(0, 0, 5000);
+    chassis.moveToPoint(0, 0, 5000);
+    chassis.turnToPoint(0, 48, 5000);
 }
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+    
     odomTest();
     //simpleQual();
     //soloWinPoint();
