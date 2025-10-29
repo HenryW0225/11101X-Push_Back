@@ -1,11 +1,4 @@
-/*#pragma once
-#include "main.cpp"
-
-void odomTest() {
-    chassis.setPose(0, 0, 0);
-    chassis.turnToPoint(24, 0, 5000);
-    //chassis.turnToPoint(24, 24, 5000);/
-}
+#include "main.h"
 
 void simpleQual() {
     chassis.setPose(-2, -7.75, 0);
@@ -49,36 +42,23 @@ void simpleQual() {
 }
 
 void leftElim() {
-    chassis.setPose(9, 1.5, 0);
+    chassis.setPose(9.5, 1.5, 0);
     intake.intakeBlock();
-    chassis.moveToPoint(0, 26, 5000, {.maxSpeed = 95});
-    pros::delay(425);
-    matchload.matchloadV(1);
-    pros::delay(100);
-    chassis.moveToPoint(-18.25, 40.15, 5000, {.maxSpeed = 70});
-    pros::delay(150);
-    matchload.matchloadV(0);
-    pros::delay(400);
-    chassis.moveToPoint(-12, 12, 5000, {.forwards = false});
-    chassis.moveToPoint(-25, 8, 1000, {.forwards = false});
-    chassis.turnToPoint(-23, -24, 1000);
-    chassis.moveToPoint(-25, 24, 1200, {.forwards = false, .maxSpeed = 60});
+    chassis.moveToPoint(-1, 26, 5000, {.maxSpeed = 95});
     pros::delay(500);
-    intake.outtakeBlock();
-    pros::delay(200);
-    intake.scoreHighGoal();
-    pros::delay(2250);
-    intake.stopIntake();
-    intake.intakeBlock();
     matchload.matchloadV(1);
-    chassis.moveToPoint(-24, -15, 1250, {.maxSpeed = 55});
-    pros::delay(1565);
-    chassis.moveToPoint(-25, 24, 1000, {.forwards = false, .maxSpeed = 70});
-    pros::delay(1000);
+    pros::delay(300);
+    matchload.matchloadV(0);
+    pros::delay(200);
+    chassis.turnToPoint(-23, 0, 5000);
+    chassis.moveToPoint(-23, 0, 5000);
+    chassis.turnToPoint(-23, -24, 1000);
+    matchload.matchloadV(1);
+    chassis.moveToPoint(-25, -24, 1300, {.maxSpeed = 75, .minSpeed = 55});
+    pros::delay(1200);
+    chassis.moveToPoint(-24, 24, 1500, {.forwards = false, .maxSpeed = 110});
+    pros::delay(1100);
     intake.scoreHighGoal();
-    pros::delay(1350);
-    chassis.moveToPoint(-25, 12, 1000, {.minSpeed = 10, .earlyExitRange = 3});
-    chassis.moveToPoint(-25, 24, 1000, {.forwards = false, .minSpeed = 70});
 }
 
 void rightElim() {
@@ -177,4 +157,4 @@ void skills() {
     chassis.moveToPoint(20.25, 23, 1500, {.forwards = false, .maxSpeed = 110});
     pros::delay(5000);
     intake.scoreHighGoal();
-}*/
+}

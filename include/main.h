@@ -79,6 +79,19 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 //#include <iostream>
+
+// Forward declarations
+class Intake;
+class Matchload;
+class Wing;
+class Park;
+
+// External global objects (defined in main.cpp)
+extern lemlib::Chassis chassis;
+extern Intake intake;
+extern Matchload matchload;
+extern Wing wing;
+extern Park park;
 #endif
 
 #endif  // _PROS_MAIN_H_

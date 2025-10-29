@@ -59,7 +59,7 @@ lemlib::ControllerSettings angularController(1.9, // (kP)
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(1.25, // (kP) 2
+lemlib::ControllerSettings headingController(1, // (kP) 2
                                              0, // (kI)
                                              20, // (kD) 20
                                              0, // anti windup
@@ -123,8 +123,9 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 
 void odomTest() {
+    chassis.setPose(0, 0, 0);
     chassis.moveToPoint(0, 48, 5000);
-    chassis.turnToPoint(-48, 0, 5000);
+    chassis.turnToPoint(-48, 48, 5000);
     chassis.moveToPoint(-48, 48, 5000);
     chassis.turnToPoint(-48, 0, 5000);
     chassis.moveToPoint(-48, 0, 5000);
@@ -136,10 +137,10 @@ void odomTest() {
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     
-    odomTest();
+    //odomTest();
     //simpleQual();
     //soloWinPoint();
-    //leftElim();
+    leftElim();
     //rightElim();
     //skills();
 }
@@ -180,7 +181,3 @@ void opcontrol() {
         pros::delay(10);
     }
 }
-
-
-
-
