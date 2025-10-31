@@ -16,6 +16,7 @@ void Intake::calibrate(bool red) {
 }
 
 void Intake::moveBottomIntake(double velocity){
+    desiredBottomVelocity = velocity;
     bottomIntakeMotors.move_velocity(velocity);
 }
 
@@ -128,22 +129,34 @@ void Intake::intakeJam(bool async) {
     } 
     int timer = 0;
     while (!driverControl) {
-        if (timer > 200) {
-            double bottomVelocity = bottomIntakeMotors.get_target_velocity();
-            double topVelocity = topIntakeMotors.get_target_velocity();
-            outtakeBlock();
-            pros::delay(200);
-            bottomIntakeMotors.move_velocity(bottomVelocity);
-            topIntakeMotors.move_velocity(topVelocity);
-            pros::delay(200);
-            timer = 0;
-        }
+        // Check if bottom intake is trying to run forward but is jammed (low actual velocity)
         if (bottomIntakeMotors.get_target_velocity() > 0 && bottomIntakeMotors.get_actual_velocity() < 25) {
             timer += 10;
         }
         else {
             timer = 0;
         }
+        
+        // If jam detected for 200ms, unjam by reversing bottom motors only
+        if (timer > 200) {
+            // Store the desired bottom velocity before unjamming
+            double savedBottomVelocity = desiredBottomVelocity;
+            
+            // Reverse only the bottom motors for unjamming (don't update desiredBottomVelocity)
+            bottomIntakeMotors.move_velocity(-600);
+            pros::delay(200);
+            
+            // Restore the desired bottom velocity
+            // Check if desiredBottomVelocity changed during the delay (autonomous code updated it)
+            // If it did, use the new value; otherwise use the saved value
+            double velocityToRestore = (desiredBottomVelocity != savedBottomVelocity) ? desiredBottomVelocity : savedBottomVelocity;
+            bottomIntakeMotors.move_velocity(velocityToRestore);
+            desiredBottomVelocity = velocityToRestore;
+            
+            // Reset timer
+            timer = 0;
+        }
+        
         pros::delay(10);
     }
 }

@@ -136,6 +136,8 @@ void odomTest() {
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+    intake.driverControl = false;
+    intake.intakeJam(true); // Start the intake jam task
     
     //odomTest();
     //simpleQual();
