@@ -144,7 +144,7 @@ void Intake::intakeJam(bool async) {
             
             // Reverse only the bottom motors for unjamming (don't update desiredBottomVelocity)
             bottomIntakeMotors.move_velocity(-600);
-            pros::delay(200);
+            pros::delay(150);
             
             // Restore the desired bottom velocity
             // Check if desiredBottomVelocity changed during the delay (autonomous code updated it)

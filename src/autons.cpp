@@ -42,34 +42,35 @@ void simpleQual() {
 }
 
 void leftElim() {
+    // Start a task to extend wing after 14.9 seconds
+    pros::Task wingTask([]() {
+        pros::delay(14400); // Wait 14.9 seconds
+        wing.wingV(1); // Extend wing
+    });
+    
     chassis.setPose(9.5, 1.5, 0);
     intake.intakeBlock();
-    chassis.moveToPoint(-1, 26, 5000, {.maxSpeed = 95, .minSpeed = 5, .earlyExitRange = 1});
+    chassis.moveToPoint(-0.75, 26, 4000, {.maxSpeed = 95, .minSpeed = 5, .earlyExitRange = 1});
     pros::delay(500);
     matchload.matchloadV(1);
     pros::delay(200);
-    matchload.matchloadV(0);
     chassis.turnToPoint(-24, 0, 2000,{.minSpeed = 5, .earlyExitRange = 1});
-    chassis.moveToPoint(-24, 0, 4000,{.minSpeed = 5, .earlyExitRange = 1});
+    chassis.moveToPoint(-24, 0, 3000,{.minSpeed = 5, .earlyExitRange = 1});
     chassis.turnToPoint(-23, -24, 2000,{.minSpeed = 10, .earlyExitRange = 1});
-    matchload.matchloadV(1);
-    chassis.moveToPoint(-23, -24, 1225, {.maxSpeed = 75, .minSpeed = 55, .earlyExitRange = 1});
-    pros::delay(1000);
-    chassis.moveToPoint(-23.5, 24, 1500, {.forwards = false, .maxSpeed = 110, .minSpeed = 5, .earlyExitRange = 1});
+    chassis.moveToPoint(-23, -13.5, 1150, {.maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
+    pros::delay(1150);
+    chassis.moveToPoint(-23, 21.5, 1600, {.forwards = false, .maxSpeed = 60, .minSpeed = 5, .earlyExitRange = 1});
     pros::delay(1100);
     matchload.matchloadV(0);
     intake.scoreHighGoal();
-    pros::delay(1900);
-    chassis.moveToPoint(-23.5, 5, 4000, {.minSpeed = 5, .earlyExitRange = 1});
-    chassis.turnToPoint(-12, 16, 2000, {.forwards = false, .minSpeed = 5, .earlyExitRange = 1});
-    wing.wingV(1);
-    chassis.moveToPoint(-12, 24, 4000, {.forwards = false, .minSpeed = 5, .earlyExitRange = 1});
-    chassis.turnToPoint(-12, 36, 2000, {.forwards = false, .minSpeed = 5, .earlyExitRange = 1});
+    pros::delay(2100);
+    intake.stopIntake();
+    chassis.moveToPoint(-23.5, 8, 3000, {.minSpeed = 20, .earlyExitRange = 1});
+    chassis.turnToPoint(-13, 8, 2000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.moveToPoint(-13, 8, 3000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.turnToPoint(-13, 36, 2000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 1});
     wing.wingV(0);
-    pros::delay(100);
-    chassis.moveToPoint(-12, 36, 1500, {.forwards = false, .maxSpeed = 65, .minSpeed = 60, .earlyExitRange = 1});
-    pros::delay(3000);
-    wing.wingV(1);
+    chassis.moveToPoint(-12.8, 36, 1500, {.forwards = false, .maxSpeed = 55, .minSpeed = 50, .earlyExitRange = 1});
 }
 
 void rightElim() {
