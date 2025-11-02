@@ -140,8 +140,8 @@ void autonomous() {
     intake.intakeJam(true); // Start the intake jam task
     //odomTest();
     //simpleQual();
-    //soloWinPoint();
-    leftElim();
+    soloWinPoint();
+    //leftElim();
     //rightElim();
     //skills();
 }

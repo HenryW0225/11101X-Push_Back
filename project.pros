@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "odomTest",
+    "project_name": "mustard",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -82,8 +82,8 @@
       }
     },
     "upload_options": {
-      "slot": 1,
-      "description": "11101X"
+      "slot": 2,
+      "description": "mustard"
     },
     "use_early_access": false
   }

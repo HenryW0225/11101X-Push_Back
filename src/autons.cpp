@@ -107,7 +107,52 @@ void rightElim() {
 }
 
 void soloWinPoint() {
-    chassis.setPose(-2, -7.75, 0);
+        chassis.setPose(9.5, 1.5, 0);
+        intake.intakeBlock();
+        chassis.moveToPoint(-0.75, 26, 4000, {.maxSpeed = 95, .minSpeed = 10, .earlyExitRange = 1});
+        pros::delay(500);
+        matchload.matchloadV(1);
+        chassis.turnToPoint(15.5, 38, 2000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(15.5, 38, 4000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
+        intake.outtakeBlock();
+        pros::delay(150);
+        intake.stopIntake();
+        intake.intakePneumaticV(1);
+        intake.scoreMiddleGoal();
+        pros::delay(500);
+        intake.stopIntake();
+        intake.outtakeBlock();
+        pros::delay(100);
+        intake.intakePneumaticV(0);
+        chassis.turnToPoint(-24, 0, 2000,{.minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(-24, 0, 3000,{.minSpeed = 10, .earlyExitRange = 1});
+        intake.intakeBlock();
+        chassis.turnToPoint(-23, -24, 2000,{.minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(-23, -13.5, 1150, {.maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
+        pros::delay(1150);
+        chassis.moveToPoint(-23, 22, 1600, {.forwards = false, .maxSpeed = 60, .minSpeed = 5, .earlyExitRange = 1});
+        pros::delay(170);
+        matchload.matchloadV(0);
+        intake.scoreHighGoal();
+        pros::delay(1500);
+        intake.stopIntake();
+        chassis.moveToPoint(-23.5, 8, 3000, {.minSpeed = 10, .earlyExitRange = 1});
+        chassis.turnToPoint(48, 24, 2000, {.minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(48, 24, 3000, {.minSpeed = 10, .earlyExitRange = 1});
+        intake.intakeBlock();
+        pros::delay(1100);
+        matchload.matchloadV(1);
+        pros::delay(100);
+        chassis.turnToPoint(72, 0, 2000, {.minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(72, 0, 3000,{.minSpeed = 10, .earlyExitRange = 1});
+        chassis.turnToPoint(71, -24, 2000,{.minSpeed = 10, .earlyExitRange = 1});
+        chassis.moveToPoint(71, -13.5, 1150, {.maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
+        pros::delay(1150);
+        chassis.moveToPoint(71, 21.5, 1600, {.forwards = false, .maxSpeed = 60, .minSpeed = 10, .earlyExitRange = 1});
+        pros::delay(1100);
+        matchload.matchloadV(0);
+        intake.scoreHighGoal();
+    /*chassis.setPose(-2, -7.75, 0);
     chassis.moveToPoint(-2, 21, 5000,{.minSpeed = 5, .earlyExitRange = 1});
     matchload.matchloadV(1);
     chassis.turnToPoint(-24, 23, 5000, {.minSpeed = 5, .earlyExitRange = 1});
@@ -156,6 +201,7 @@ void soloWinPoint() {
     intake.scoreHighGoal();
     pros::delay(700);
     chassis.moveToPoint(17, -68, 1000, {.minSpeed = 10, .earlyExitRange = 1});
+    */
 }
 
 void skills() {
