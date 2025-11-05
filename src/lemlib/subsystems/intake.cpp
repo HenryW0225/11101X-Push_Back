@@ -34,8 +34,8 @@ void Intake::intakeBlock() {
 }
 
 void Intake::outtakeBlock() {
-    moveBottomIntake(600);
-    moveTopIntake(-600);
+    moveBottomIntake(-600);
+    moveTopIntake(600);
 }
 
 void Intake::scoreMiddleGoal() {

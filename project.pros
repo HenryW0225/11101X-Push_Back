@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "mustard",
+    "project_name": "swp mustard!!",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -83,7 +83,7 @@
     },
     "upload_options": {
       "slot": 2,
-      "description": "mustard"
+      "description": "swp mustard!!"
     },
     "use_early_access": false
   }
