@@ -34,6 +34,8 @@ class Intake {
         void scoreHighGoal();
 
         void stopIntake();
+
+        void scoreMiddleHigh();
     
         void intakeControl();
 
