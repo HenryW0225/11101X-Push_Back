@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "swp mustard!!",
+    "project_name": "skills 6161",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -82,8 +82,8 @@
       }
     },
     "upload_options": {
-      "slot": 2,
-      "description": "swp mustard!!"
+      "slot": 3,
+      "description": "skills 61"
     },
     "use_early_access": false
   }
