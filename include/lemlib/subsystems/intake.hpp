@@ -42,6 +42,13 @@ class Intake {
         //intake jam functions
 
         void intakeJam(bool async);
+        
+        // Jam tracking functions (for extending intake time in auton)
+        void startJamTracking(); // Start tracking jams for current section
+        void stopJamTracking();  // Stop tracking jams
+        void resetJamCount();    // Reset jam counter
+        int getJamCount();       // Get number of jams that occurred
+        int getJamDelay(int baseDelay); // Get extended delay based on jam count (adds 200ms per jam)
 
         //color sort functions
 
@@ -72,4 +79,8 @@ class Intake {
         bool driverControl = false;
 
         double desiredBottomVelocity = 0;
+        
+        // Jam tracking variables
+        int jamCount = 0;
+        bool jamTrackingActive = false;
 };

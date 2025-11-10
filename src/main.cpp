@@ -142,8 +142,8 @@ void autonomous() {
     //simpleQual();
     //soloWinPoint();
     //leftElim();
-    //rightElim();
-    skills();
+    rightElim();
+    //skills();
 }
 
 void opcontrol() {

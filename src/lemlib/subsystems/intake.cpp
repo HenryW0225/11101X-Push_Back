@@ -60,7 +60,7 @@ void Intake::spitOut() {
 
 void Intake::scoreMiddleHigh() {
     moveBottomIntake(0);
-    moveTopIntake(-150);
+    moveTopIntake(-100);
 }
 
 void Intake::intakePneumaticChange() {
@@ -144,6 +144,11 @@ void Intake::intakeJam(bool async) {
         
         // If jam detected for 200ms, unjam by reversing bottom motors only
         if (timer > 200) {
+            // Increment jam count if tracking is active
+            if (jamTrackingActive) {
+                jamCount++;
+            }
+            
             // Store the desired bottom velocity before unjamming
             double savedBottomVelocity = desiredBottomVelocity;
             
@@ -164,4 +169,26 @@ void Intake::intakeJam(bool async) {
         
         pros::delay(10);
     }
+}
+
+void Intake::startJamTracking() {
+    jamTrackingActive = true;
+    jamCount = 0; // Reset count when starting new tracking session
+}
+
+void Intake::stopJamTracking() {
+    jamTrackingActive = false;
+}
+
+void Intake::resetJamCount() {
+    jamCount = 0;
+}
+
+int Intake::getJamCount() {
+    return jamCount;
+}
+
+int Intake::getJamDelay(int baseDelay) {
+    // Add 200ms per jam to compensate for time lost during unjamming
+    return baseDelay + (jamCount * 200);
 }
