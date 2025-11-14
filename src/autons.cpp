@@ -99,7 +99,12 @@ void rightElim() {
 }
 
 void soloWinPoint() {
-        chassis.setPose(9.5, 1.5, 0);
+        //new swp
+        chassis.setPose(14, -4, 90);
+        intake.intakeBlock();
+        chassis.moveToPoint(46, -4, 4000, {.minSpeed = 30, .earlyExitRange = 3});
+        chassis.turnToPoint(46, 22.5, 2000);
+        /*chassis.setPose(9.5, 1.5, 0);
         intake.intakeBlock();
         chassis.moveToPoint(-1.5, 25.5, 4000, {.minSpeed = 20, .earlyExitRange = 2});
         chassis.turnToPoint(15.25, 37, 2000, {.forwards = false, .minSpeed = 45, .earlyExitRange = 5});
@@ -139,7 +144,7 @@ void soloWinPoint() {
         pros::delay(1000);
         intake.scoreHighGoal();
         matchload.matchloadV(0);
-        //finish score high goal #2
+        //finish score high goal #2*/
 }
 
 void skills() {
@@ -200,3 +205,12 @@ void skills() {
 
     
 }
+
+
+/*auton plans:
+left qualification - score three in mid, pick up matchload, score in high, wing push
+right qualification - score two in low, pick up matchload, score in high, wing push
+solo win point - pick up matchload #1, score 3 in long, pikcup 3 balls, score 4 in mid, pick up 3 balls, pick up matchload #2, score 6 - 7 in high
+elim 4 ball - pikcup three, pick up matchload, score 4 in high, wing push
+elim 7 ball - pickup three, pick up matchload, score 7 in high, wing push
+*/
