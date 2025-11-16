@@ -2,41 +2,40 @@
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue); 
-pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue); 
+pros::MotorGroup leftMotors({-13, -12, -11}, pros::MotorGearset::blue); 
+pros::MotorGroup rightMotors({18, 20, 19}, pros::MotorGearset::blue); 
 pros::Motor bottomIntakeMotors(16, pros::MotorGearset::blue);
-pros::Motor topIntakeMotors(15, pros::MotorGearset::blue);
+pros::Motor topIntakeMotors(17, pros::MotorGearset::blue);
 
-pros::adi::DigitalOut matchLoadPneumatic('g');
-pros::adi::DigitalOut intakePneumatic('h');
-pros::adi::DigitalOut wingPneumatic('e');
-pros::adi::DigitalOut parkPneumatic('f');
+pros::adi::DigitalOut matchLoadPneumatic('h');
+pros::adi::DigitalOut intakePneumatic('g');
+pros::adi::DigitalOut wingPneumatic('f');
 
-pros::Imu imu(17);
+pros::Imu imu(1);
 
-pros::Optical colorSensor(1);
+pros::Optical colorSensor(2);
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontalEnc(-14);
+pros::Rotation horizontalEnc(-15);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation verticalEnc(-9);
+pros::Rotation verticalEnc(-14);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.2);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.15);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.2);
+lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.3);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
-                              10.95, // 11 inch track width
+                              11, // 11 inch track width
                               lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(3.7, // (kP)
+lemlib::ControllerSettings linearController(4, // (kP)
                                             0, // (kI)
-                                            10, // (kD)
+                                            4, // (kD)
                                             0, //
                                             1, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
@@ -59,7 +58,7 @@ lemlib::ControllerSettings angularController(1.9, // (kP)
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(1, // (kP) 2
+lemlib::ControllerSettings headingController(.3, // (kP) 2
                                              0, // (kI)
                                              20, // (kD) 20
                                              0, // anti windup
@@ -100,8 +99,6 @@ Matchload matchload(matchLoadPneumatic);
 
 Wing wing(wingPneumatic);
 
-Park park(parkPneumatic);
-
 void initialize() {
     pros::lcd::initialize(); 
     chassis.calibrate(); 
@@ -110,7 +107,6 @@ void initialize() {
     intake.calibrate(true);
     matchload.calibrate();
     wing.calibrate();
-    park.calibrate();
 }
 
 void disabled() {}
@@ -120,29 +116,15 @@ void competitionInitialize() {}
 // get a path used for pure pursuit
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
-
-
-void odomTest() {
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, 48, 5000);
-    chassis.turnToPoint(-48, 48, 5000);
-    chassis.moveToPoint(-48, 48, 5000);
-    chassis.turnToPoint(-48, 0, 5000);
-    chassis.moveToPoint(-48, 0, 5000);
-    chassis.turnToPoint(0, 0, 5000);
-    chassis.moveToPoint(0, 0, 5000);
-    chassis.turnToPoint(0, 48, 5000);
-}
-
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
     //odomTest();
-    //simpleQual();
+    simpleQual();
     //soloWinPoint();
     //leftElim();
-    rightElim();
+    //rightElim();
     //skills();
 }
 
@@ -157,6 +139,7 @@ void opcontrol() {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.scoreHighGoal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtakeBlock(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intakeBlock(); }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.intakeOut();}
         else { intake.stopIntake(); }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
@@ -167,18 +150,13 @@ void opcontrol() {
             matchload.matchloadChange();
         }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
             intake.intakePneumaticChange();
         }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
             wing.wingChange();
         }
-
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-            park.parkChange();
-        }
-
         pros::delay(10);
     }
 }

@@ -63,6 +63,11 @@ void Intake::scoreMiddleHigh() {
     moveTopIntake(-100);
 }
 
+void Intake::intakeOut() {
+    moveBottomIntake(600);
+    moveTopIntake(600);
+}
+
 void Intake::intakePneumaticChange() {
     if (intakePneumaticActive) {
         intakePneumaticV(1);

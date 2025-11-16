@@ -43,26 +43,3 @@ void Wing::wingChange() {
 void Wing::calibrate() {
     wingV(0);
 }
-
-Park::Park(pros::adi::DigitalOut parkPneumatic)
-    : parkPneumatic(parkPneumatic) {}
-
-void Park::parkV(int value) {
-    parkPneumatic.set_value(value);
-}
-
-void Park::parkChange() {
-    if (parkDown) {
-        parkV(0);
-        parkDown = false;
-    }
-    else {
-        parkV(1);
-        parkDown = true;
-    }
-}
-
-void Park::calibrate() {
-    parkV(0);
-}
-

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "right_elim_7",
+    "project_name": "puhh",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -82,8 +82,8 @@
       }
     },
     "upload_options": {
-      "slot": 4,
-      "description": "right_elim_7"
+      "slot": 1,
+      "description": "puhbhh"
     },
     "use_early_access": false
   }

@@ -35,20 +35,3 @@ class Wing {
         //wing variables
         bool wingUp = false;
 };
-
-class Park {
-    public:
-        //constructor
-        Park(pros::adi::DigitalOut parkPneumatic);
-
-        //park pneumatic
-        pros::adi::DigitalOut parkPneumatic;
-
-        //park Functions
-        void parkV(int value);
-        void parkChange();
-        void calibrate();
- 
-        //parking variables
-        bool parkDown = false;
-};

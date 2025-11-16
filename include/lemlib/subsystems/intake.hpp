@@ -39,6 +39,8 @@ class Intake {
     
         void intakeControl();
 
+        void intakeOut();
+
         //intake jam functions
 
         void intakeJam(bool async);
