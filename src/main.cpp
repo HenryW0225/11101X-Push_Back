@@ -20,13 +20,13 @@ pros::Rotation horizontalEnc(-15);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
 pros::Rotation verticalEnc(-14);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.15);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.875);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.3);
+lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.35);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
-                              11, // 11 inch track width
+                              11.05, // 11.05 inch track width
                               lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
@@ -120,8 +120,8 @@ void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
-    //odomTest();
-    simpleQual();
+    odomTest();
+    //simpleQual();
     //soloWinPoint();
     //leftElim();
     //rightElim();

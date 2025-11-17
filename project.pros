@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "puhh",
+    "project_name": "odom_test",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -83,7 +83,7 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "puhbhh"
+      "description": "odom_test"
     },
     "use_early_access": false
   }
