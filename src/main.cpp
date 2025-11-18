@@ -16,7 +16,7 @@ pros::Imu imu(1);
 pros::Optical colorSensor(2);
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontalEnc(-15);
+pros::Rotation horizontalEnc(15);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
 pros::Rotation verticalEnc(-14);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
@@ -33,21 +33,21 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(4, // (kP)
+lemlib::ControllerSettings linearController(4.067, // (kP)
                                             0, // (kI)
                                             4, // (kD)
                                             0, //
-                                            1, // small error range, in inches
+                                            0.8, // small error range, in inches
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
-                                            500, // large error range timeout, in milliseconds
+                                            300, // large error range timeout, in milliseconds
                                             20 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.9, // (kP)
+lemlib::ControllerSettings angularController(1.6, // (kP)
                                              0, // (kI)
-                                             12.5, // (kD)
+                                             9.5, // (kD)
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -58,9 +58,9 @@ lemlib::ControllerSettings angularController(1.9, // (kP)
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(.3, // (kP) 2
+lemlib::ControllerSettings headingController(.05, // (kP) 2
                                              0, // (kI)
-                                             20, // (kD) 20
+                                             30, // (kD) 20
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -117,11 +117,37 @@ void competitionInitialize() {}
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
+    // Set pen color to white for visibility
+    pros::screen::set_pen(pros::Color::white);
+    pros::delay(200);
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
-    odomTest();
-    //simpleQual();
+ pros::Task printCoordsTask([]() {
+        bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
+        while (true) {
+            lemlib::Pose pose = chassis.getPose();
+            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "MUSTARD!!!!!: %.2f", pose.x);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "676767676767: %.2f", pose.y);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "dont kill the party: %.2f", pose.theta);
+            
+            // Check if theta is greater than 90 degrees (only set flag, never clear it)
+            if (pose.theta > 91) {
+                thetaExceeded90 = true;
+            }
+            
+            // Show warning if theta has ever exceeded 90
+            if (thetaExceeded90) {
+                pros::screen::print(pros::E_TEXT_MEDIUM, 3, "WARNING: Theta > 91!");
+            } else {
+                pros::screen::print(pros::E_TEXT_MEDIUM, 3, ""); // Clear the warning
+            }
+            
+            pros::delay(20); // Update every 100ms
+        }
+    });
+    //odomTest();
+    simpleQual();
     //soloWinPoint();
     //leftElim();
     //rightElim();
