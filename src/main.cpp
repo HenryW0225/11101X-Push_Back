@@ -41,7 +41,7 @@ lemlib::ControllerSettings linearController(4.067, // (kP)
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
                                             300, // large error range timeout, in milliseconds
-                                            20 // maximum acceleration (slew)
+                                            15 // maximum acceleration (slew)
 );
 
 // angular motion controller
@@ -120,7 +120,7 @@ void autonomous() {
     // Set pen color to white for visibility
     pros::screen::set_pen(pros::Color::white);
     pros::delay(200);
-    chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
  pros::Task printCoordsTask([]() {
