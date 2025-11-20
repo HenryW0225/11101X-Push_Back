@@ -88,6 +88,7 @@ class Park;
 
 // External global objects (defined in main.cpp)
 extern lemlib::Chassis chassis;
+extern lemlib::Chassis chassis2;
 extern Intake intake;
 extern Matchload matchload;
 extern Wing wing;

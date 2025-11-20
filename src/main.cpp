@@ -58,7 +58,7 @@ lemlib::ControllerSettings angularController(1.6, // (kP)
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(.05, // (kP) 2
+lemlib::ControllerSettings headingController(0.5, // (kP) 2
                                              0, // (kI)
                                              30, // (kD) 20
                                              0, // anti windup
@@ -69,6 +69,16 @@ lemlib::ControllerSettings headingController(.05, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
+lemlib::ControllerSettings headingController2(2, // (kP) 2
+                                             0, // (kI)
+                                             20, // (kD) 20
+                                             0, // anti windup
+                                             1, // small error range, in degrees
+                                             100, // small error range timeout, in milliseconds
+                                             3, // large error range, in degrees
+                                             500, // large error range timeout, in milliseconds
+                                             0 // maximum acceleration (slew)
+);
 
 // sensors for odometry
 lemlib::OdomSensors sensors(&vertical, 
@@ -91,8 +101,9 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 );
 
 // create the chassis
-lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
+lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);\
 
+lemlib::Chassis chassis2(drivetrain, linearController, angularController, headingController2, sensors);
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
 
 Matchload matchload(matchLoadPneumatic);
@@ -120,7 +131,7 @@ void autonomous() {
     // Set pen color to white for visibility
     pros::screen::set_pen(pros::Color::white);
     pros::delay(200);
-    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
  pros::Task printCoordsTask([]() {
@@ -147,9 +158,9 @@ void autonomous() {
         }
     });
     //odomTest();
-    simpleQual();
+    //simpleQual();
     //soloWinPoint();
-    //leftElim();
+    leftElim();
     //rightElim();
     //skills();
 }

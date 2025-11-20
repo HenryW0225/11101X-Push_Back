@@ -911,6 +911,7 @@ class Chassis {
          * @warning Do not interact with these unless you know what you are doing
          */
         PID headingPID;
+        ControllerSettings headingSettings;
     protected:
         /**
          * @brief Indicates that this motion is queued and blocks current task until this motion reaches front of queue
@@ -928,7 +929,7 @@ class Chassis {
 
         ControllerSettings lateralSettings;
         ControllerSettings angularSettings;
-        ControllerSettings headingSettings;
+
         Drivetrain drivetrain;
         OdomSensors sensors;
         DriveCurve* throttleCurve;
