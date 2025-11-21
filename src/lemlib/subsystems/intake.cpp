@@ -10,7 +10,7 @@ void Intake::calibrate(bool red) {
     colorSortActive = true;
     intakePneumaticV(0);
     intakePneumaticActive = true;
-    topIntakeMotors.set_brake_mode(MOTOR_BRAKE_HOLD);
+    topIntakeMotors.set_brake_mode(MOTOR_BRAKE_COAST);
     //if (red) { redColorSort(); }
     //else { blueColorSort(); }
 }

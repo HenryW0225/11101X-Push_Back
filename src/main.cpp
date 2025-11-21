@@ -134,7 +134,7 @@ void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
- pros::Task printCoordsTask([]() {
+    pros::Task printCoordsTask([]() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
             lemlib::Pose pose = chassis.getPose();
@@ -160,8 +160,8 @@ void autonomous() {
     //odomTest();
     //simpleQual();
     //soloWinPoint();
-    leftElim();
-    //rightElim();
+    //leftElim();
+    rightElim();
     //skills();
 }
 
