@@ -69,7 +69,7 @@ lemlib::ControllerSettings headingController(0.5, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings headingController2(2, // (kP) 2
+lemlib::ControllerSettings headingController2(3, // (kP) 2
                                              0, // (kI)
                                              20, // (kD) 20
                                              0, // anti windup
@@ -134,7 +134,7 @@ void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
     intake.intakeJam(true); // Start the intake jam task
-    pros::Task printCoordsTask([]() {
+    /*pros::Task printCoordsTask([]() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
             lemlib::Pose pose = chassis.getPose();
@@ -156,12 +156,12 @@ void autonomous() {
             
             pros::delay(20); // Update every 100ms
         }
-    });
+    });*/
     //odomTest();
     //simpleQual();
     //soloWinPoint();
-    //leftElim();
-    rightElim();
+    leftElim();
+    //rightElim();
     //skills();
 }
 

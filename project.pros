@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "not tight",
+    "project_name": "left_elim",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -82,8 +82,8 @@
       }
     },
     "upload_options": {
-      "slot": 3,
-      "description": "not tight"
+      "slot": 2,
+      "description": "left_elim"
     },
     "use_early_access": false
   }
