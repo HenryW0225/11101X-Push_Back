@@ -9,7 +9,7 @@
 pros::Task* trackingTask = nullptr;
 
 // global variables
-lemlib::OdomSensors odomSensors(nullptr, nullptr, nullptr, nullptr, nullptr); // the sensors to be used for odometry
+lemlib::OdomSensors odomSensors(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr); // the sensors to be used for odometry
 lemlib::Drivetrain drive(nullptr, nullptr, 0, 0, 0, 0); // the drivetrain to be used for odometry
 lemlib::Pose odomPose(0, 0, 0); // the pose of the robot
 lemlib::Pose odomSpeed(0, 0, 0); // the speed of the robot
@@ -199,4 +199,50 @@ double lemlib::horizontalDistance() {
     if (odomSensors.horizontal1 != nullptr) return odomSensors.horizontal1->getDistanceTraveled();
     if (odomSensors.horizontal2 != nullptr) return odomSensors.horizontal2->getDistanceTraveled();
     return 0;
+}
+double lemlib::getBackDistance() {
+    double sum = 0.0;  // initialize!
+    for(int i = 0; i < 5; i++)
+    {
+        sum += odomSensors.distanceLeftBack->get_distance();
+        pros::delay(20);
+    }
+    return sum / 5.0 * 0.0393701;  // convert mm -> inches
+}
+
+double lemlib::getLeftFrontDistance() {
+    double sum = 0.0;  // initialize!
+    for(int i = 0; i < 5; i++)
+    {
+        sum += odomSensors.distanceLeftFront->get_distance();
+        pros::delay(20);
+    }
+    return sum / 5.0 * 0.0393701;  // convert mm -> inches
+}
+
+double lemlib::resetAngleWithSelfCorrectionInches() {
+    // 1. Take initial readings (averaged, in inches)
+    double L1 = getLeftFrontDistance();   // LEFT distance sensor
+    double R1 = getBackDistance();        // RIGHT distance sensor
+
+    if (std::isnan(L1) || std::isnan(R1)) return 0.0;
+
+    // 2. (Optional) take another reading for more accuracy
+    // You can simulate a “+5° rotation” by moving the robot slightly in auton if needed.
+    double L2 = getLeftFrontDistance();
+    double R2 = getBackDistance();
+
+    if (std::isnan(L2) || std::isnan(R2)) return 0.0;
+
+    // 3. Compute deltas
+    double dL = L2 - L1;
+    double dR = R2 - R1;
+
+    double difference = dL - dR;
+
+    // 4. Compute angle
+    double angle_rad = atan(difference / BASE_WIDTH_IN);
+    double angle_deg = angle_rad * (180.0 / M_PI);
+
+    return angle_deg;  // returns the angle error in degrees
 }

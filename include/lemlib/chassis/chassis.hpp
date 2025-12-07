@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pros/distance.hpp"
 #include "pros/rtos.hpp"
 #include "pros/imu.hpp"
 #include "lemlib/asset.hpp"
@@ -18,12 +19,14 @@ class OdomSensors {
     public:
 
         OdomSensors(TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
-                    TrackingWheel* horizontal2, pros::Imu* imu);
+                    TrackingWheel* horizontal2, pros::Imu* imu, pros::Distance* distanceLeftBack, pros::Distance* distanceLeftFront);
         TrackingWheel* vertical1;
         TrackingWheel* vertical2;
         TrackingWheel* horizontal1;
         TrackingWheel* horizontal2;
         pros::Imu* imu;
+        pros::Distance* distanceLeftBack;
+        pros::Distance* distanceLeftFront;
 };
 
 /**
@@ -338,6 +341,10 @@ class Chassis {
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
+                DriveCurve* steerCurve = &defaultDriveCurve);
+
+        Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
+                OdomSensors sensors, pros::Distance distance, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
          * @brief Calibrate the chassis sensors. THis should be called in the initialize function
@@ -891,11 +898,10 @@ class Chassis {
          */
         void resetLocalPosition();
         /**
-         * PIDs are exposed so advanced users can implement things like gain scheduling
-         * Changes are immediate and will affect a motion in progress
-         *
-         * @warning Do not interact with these unless you know what you are doing
+         * reset with distance sensor
          */
+        void resetWithDistance(double wall);
+        double resetAngleWithSelfCorrectionInches();
         PID lateralPID;
         /**
          * PIDs are exposed so advanced users can implement things like gain scheduling

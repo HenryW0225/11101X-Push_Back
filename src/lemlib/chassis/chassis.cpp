@@ -10,12 +10,14 @@
 #include "pros/rtos.hpp"
 
 lemlib::OdomSensors::OdomSensors(TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
-                                 TrackingWheel* horizontal2, pros::Imu* imu)
+                                 TrackingWheel* horizontal2, pros::Imu* imu, pros::Distance* distanceLeftBack, pros::Distance* distanceLeftFront)
     : vertical1(vertical1),
       vertical2(vertical2),
       horizontal1(horizontal1),
       horizontal2(horizontal2),
-      imu(imu) {}
+      imu(imu),
+      distanceLeftBack(distanceLeftBack),
+      distanceLeftFront(distanceLeftFront) {}
 
 lemlib::Drivetrain::Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* rightMotors, float trackWidth,
                                float wheelDiameter, float rpm, float horizontalDrift)
@@ -183,6 +185,27 @@ void lemlib::Chassis::setBrakeMode(pros::motor_brake_mode_e mode) {
     drivetrain.rightMotors->set_brake_mode_all(mode);
 }
 
+void lemlib::Chassis::resetWithDistance(double wall){
+    float y = this->getPose().y;
+    float theta = this->getPose().theta;
+    lemlib::setPose(lemlib::Pose((wall - getLeftBackDistance()), y, theta));
+}
+
+double lemlib::Chassis::resetAngleWithSelfCorrectionInches(){
+    lemlib::resetAngleWithSelfCorrectionInches();
+}
+/*
+void lemlib::Chassis::distanceReset(double count) {
+    double sum;
+    double average;
+    for(int i = 0; i < count; i++)
+    {
+        sum += distance1.get_distance();
+        pros::delay(20);
+    }
+    average = sum/count*0.0393701;
+    setPose(average, pose.y, pose.theta);
+}
 
 /*void lemlib::Chassis::odomConfiguration() {
     //drivetrain.leftMotors->set_brake_mode_all(MOTOR_BRAKE_HOLD);

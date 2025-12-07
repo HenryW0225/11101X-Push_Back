@@ -60,6 +60,15 @@ void update();
 void init();
 double verticalDistance();
 double horizontalDistance();
+double distanceReset();
+const double BASE_WIDTH_IN = 6.375;
+const double CALIB_ANGLE = 5.0;
+double mmToInches(double mm);
+double getLeftBackDistance();
+double getLeftFrontDistance();
+double getBackDistance();
+double readDistanceInches();
+double resetAngleWithSelfCorrectionInches();
 
 } // namespace lemlib
 

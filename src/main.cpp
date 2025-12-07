@@ -1,4 +1,6 @@
 #include "main.h"
+#include "lemlib/chassis/odom.hpp"
+#include "pros/distance.hpp"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -23,6 +25,10 @@ pros::Rotation verticalEnc(-14);
 lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.875);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.35);
+
+pros::Distance distanceLeftBack(7);
+pros::Distance distanceLeftFront(10);
+pros::Distance distanceBack(10);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
@@ -85,7 +91,9 @@ lemlib::OdomSensors sensors(&vertical,
                             nullptr, 
                             &horizontal, 
                             nullptr,
-                            &imu
+                            &imu,
+                            &distanceLeftBack,
+                            &distanceLeftFront
 );
 
 // input curve for throttle input during driver control
@@ -101,7 +109,7 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 );
 
 // create the chassis
-lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);\
+lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
 
 lemlib::Chassis chassis2(drivetrain, linearController, angularController, headingController2, sensors);
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
@@ -111,8 +119,10 @@ Matchload matchload(matchLoadPneumatic);
 Wing wing(wingPneumatic);
 
 void initialize() {
-    pros::lcd::initialize(); 
+    pros::screen::set_eraser(pros::Color::black);
+    pros::screen::set_pen(pros::Color::white);
     chassis.calibrate(); 
+    
 
     // red alliance - true, blue alliance - false
     intake.calibrate(true);
@@ -128,22 +138,21 @@ void competitionInitialize() {}
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
-    // Set pen color to white for visibility
-    pros::screen::set_pen(pros::Color::white);
-    pros::delay(200);
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
     intake.driverControl = false;
-    intake.intakeJam(true); // Start the intake jam task
-    /*pros::Task printCoordsTask([]() {
+    intake.intakeJam(true);
+   
+    // Start the intake jam task
+    pros::Task printCoordsTask([]() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
             lemlib::Pose pose = chassis.getPose();
-            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "MUSTARD!!!!!: %.2f", pose.x);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "676767676767: %.2f", pose.y);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "dont kill the party: %.2f", pose.theta);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
             
             // Check if theta is greater than 90 degrees (only set flag, never clear it)
-            if (pose.theta > 91) {
+           /* if (pose.theta > 91) {
                 thetaExceeded90 = true;
             }
             
@@ -152,20 +161,21 @@ void autonomous() {
                 pros::screen::print(pros::E_TEXT_MEDIUM, 3, "WARNING: Theta > 91!");
             } else {
                 pros::screen::print(pros::E_TEXT_MEDIUM, 3, ""); // Clear the warning
-            }
+            }*/
             
             pros::delay(20); // Update every 100ms
         }
-    });*/
+    });
     //odomTest();
     //simpleQual();
     //soloWinPoint();
-    leftElim();
+    //leftElim();
     //rightElim();
     //skills();
 }
 
 void opcontrol() {
+
     intake.driverControl = true;
     intake.colorSortActive = false;
     while (true) {

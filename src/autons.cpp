@@ -3,16 +3,38 @@
 
 void odomTest() {
     chassis.setPose(0, 0, 0);
+    pros::Task printCoordsTask([]() {
+        while (true) {
+            lemlib::Pose pose = chassis.getPose();
+            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
+            pros::delay(20);
+        }
+    });
+    pros::delay(1000);
+    //chassis.resetWithDistance(66.5);
+    
+    double error = chassis.resetAngleWithSelfCorrectionInches();
+    while(fabs(error) > 1.0) { // 1 degree threshold
+        lemlib::Pose pose = chassis.getPose();
+        double targetHeading = pose.theta + error;
+        chassis.turnToHeading(targetHeading, 4000, {.maxSpeed = 40, .minSpeed = 5});
+        pros::delay(50);
+        error = chassis.resetAngleWithSelfCorrectionInches();
+    }
+
+
     //chassis.turnToPoint(48, 0, 5000);
     //chassis.moveToPoint(0, 48, 5000);
-    chassis.moveToPoint(0, 48, 5000);
+    /*chassis.moveToPoint(0, 48, 5000);
     chassis.turnToPoint(48, 48, 3000);
     chassis.moveToPoint(48, 48, 5000);
     chassis.turnToPoint(48, 0, 3000);
     chassis.moveToPoint(48, 0, 5000);
     chassis.turnToPoint(0, 0, 3000);
     chassis.moveToPoint(0, 0, 5000);
-    chassis.turnToPoint(0, 48, 3000);
+    chassis.turnToPoint(0, 48, 3000);*/
 }
 void simpleQual() {
         chassis.setPose(9.5, 1.7, 0);
