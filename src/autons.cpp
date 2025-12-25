@@ -2,7 +2,7 @@
 //
 
 void odomTest() {
-    chassis.setPose(0, 0, 0);
+   /* chassis.setPose(0, 0, 0);
     pros::Task printCoordsTask([]() {
         while (true) {
             lemlib::Pose pose = chassis.getPose();
@@ -22,8 +22,14 @@ void odomTest() {
         chassis.turnToHeading(targetHeading, 4000, {.maxSpeed = 40, .minSpeed = 5});
         pros::delay(50);
         error = chassis.resetAngleWithSelfCorrectionInches();
-    }
+    }*/
 
+    chassis.turnToHeading(90, 5000);
+    /*pros::delay(4000);
+    chassisShort.turnToHeading(90, 5000);
+    pros::delay(4000);
+    chassis.turnToHeading(180, 5000);*/
+    
 
     //chassis.turnToPoint(48, 0, 5000);
     //chassis.moveToPoint(0, 48, 5000);
@@ -153,10 +159,10 @@ void leftElim() {
         pros::delay(1100);
         intake.stopIntake();
         //finish score high goal
-        chassis2.moveToPoint(-14.95, 13, 3000, {.minSpeed = 25, .earlyExitRange = 1});
-        chassis2.turnToPoint(-13.6, 32, 2000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
-        chassis2.moveToPoint(-13.6, 32, 2000, {.forwards = false, .maxSpeed = 75, .minSpeed = 70, .earlyExitRange = 1});
-        chassis2.turnToPoint(0, 96, 2000, {.forwards = false});
+        chassisSwing.moveToPoint(-14.95, 13, 3000, {.minSpeed = 25, .earlyExitRange = 1});
+        chassisSwing.turnToPoint(-13.6, 32, 2000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
+        chassisSwing.moveToPoint(-13.6, 32, 2000, {.forwards = false, .maxSpeed = 75, .minSpeed = 70, .earlyExitRange = 1});
+        chassisSwing.turnToPoint(0, 96, 2000, {.forwards = false});
     /*
         chassis.setPose(9.5, 1.5, 0);
         intake.intakeBlock();
@@ -205,9 +211,9 @@ void rightElim() {
     pros::delay(1000);
     intake.stopIntake();
     //finish score high goal
-    chassis2.moveToPoint(33.15, 12, 3000, {.minSpeed = 30, .earlyExitRange = 1});
-    chassis2.turnToPoint(33.9, 31.5, 2000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
-    chassis2.moveToPoint(33.9, 31.5, 2000, {.forwards = false, .maxSpeed = 65, .minSpeed = 60, .earlyExitRange = 1});
+    chassisSwing.moveToPoint(33.15, 12, 3000, {.minSpeed = 30, .earlyExitRange = 1});
+    chassisSwing.turnToPoint(33.9, 31.5, 2000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
+    chassisSwing.moveToPoint(33.9, 31.5, 2000, {.forwards = false, .maxSpeed = 65, .minSpeed = 60, .earlyExitRange = 1});
 
     /*
     chassis.setPose(-9.5, 1.5, 0);

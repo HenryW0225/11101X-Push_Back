@@ -29,6 +29,7 @@ void Intake::intakePneumaticV(int value) {
 }
 
 void Intake::intakeBlock() {
+    topIntakeMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     moveBottomIntake(600);
     moveTopIntake(0);
 }

@@ -87,8 +87,10 @@ class Wing;
 class Park;
 
 // External global objects (defined in main.cpp)
-extern lemlib::Chassis chassis;
-extern lemlib::Chassis chassis2;
+extern lemlib::Chassis chassis; //normal
+extern lemlib::Chassis chassisLong; //long turn
+extern lemlib::Chassis chassisShort; //short turn
+extern lemlib::Chassis chassisSwing; //swing pid
 extern Intake intake;
 extern Matchload matchload;
 extern Wing wing;

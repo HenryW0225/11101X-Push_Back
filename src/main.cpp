@@ -1,6 +1,7 @@
 #include "main.h"
 #include "lemlib/chassis/odom.hpp"
 #include "pros/distance.hpp"
+#include "pros/motors.h"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -13,18 +14,18 @@ pros::adi::DigitalOut matchLoadPneumatic('h');
 pros::adi::DigitalOut intakePneumatic('g');
 pros::adi::DigitalOut wingPneumatic('f');
 
-pros::Imu imu(1);
+pros::Imu imu(15);
 
 pros::Optical colorSensor(2);
 
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontalEnc(15);
+pros::Rotation horizontalEnc(14);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation verticalEnc(-14);
+pros::Rotation verticalEnc(10);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.875);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -2.25);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.35);
+lemlib::TrackingWheel vertical(&verticalEnc, 2, -0.4125);
 
 pros::Distance distanceLeftBack(7);
 pros::Distance distanceLeftFront(10);
@@ -32,7 +33,7 @@ pros::Distance distanceBack(10);
 
 lemlib::Drivetrain drivetrain(&leftMotors, 
                               &rightMotors, 
-                              11.05, // 11.05 inch track width
+                              10.325, // 11.05 inch track width
                               lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
@@ -51,9 +52,9 @@ lemlib::ControllerSettings linearController(4.067, // (kP)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.6, // (kP)
+lemlib::ControllerSettings angularController(1.7, // (kP)
                                              0, // (kI)
-                                             9.5, // (kD)
+                                             11, // (kD)
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -75,7 +76,29 @@ lemlib::ControllerSettings headingController(0.5, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings headingController2(3, // (kP) 2
+lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
+                                             0, // (kI)
+                                             20, // (kD) 20
+                                             0, // anti windup
+                                             1, // small error range, in degrees
+                                             100, // small error range timeout, in milliseconds
+                                             3, // large error range, in degrees
+                                             500, // large error range timeout, in milliseconds
+                                             0 // maximum acceleration (slew)
+);
+
+lemlib::ControllerSettings angularControllerShort(1.85, // (kP) 2
+                                             0, // (kI)
+                                             11, // (kD) 20
+                                             0, // anti windup
+                                             1, // small error range, in degrees
+                                             100, // small error range timeout, in milliseconds
+                                             2, // large error range, in degrees
+                                             500, // large error range timeout, in milliseconds
+                                             0 // maximum acceleration (slew)
+);
+
+lemlib::ControllerSettings angularControllerSwing(3, // (kP) 2
                                              0, // (kI)
                                              20, // (kD) 20
                                              0, // anti windup
@@ -111,7 +134,13 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
 
-lemlib::Chassis chassis2(drivetrain, linearController, angularController, headingController2, sensors);
+lemlib::Chassis chassisSwing(drivetrain, linearController, angularControllerSwing, headingController, sensors);
+
+lemlib::Chassis chassisShort(drivetrain, linearController, angularControllerShort, headingController, sensors);
+
+lemlib::Chassis chassisLong(drivetrain, linearController, angularControllerLong, headingController, sensors);
+
+
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
 
 Matchload matchload(matchLoadPneumatic);
@@ -139,6 +168,7 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
     chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+
     intake.driverControl = false;
     intake.intakeJam(true);
    
@@ -147,12 +177,12 @@ void autonomous() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
             lemlib::Pose pose = chassis.getPose();
-            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
+            //pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
+            //pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "theta: %.2f", pose.theta);
             
             // Check if theta is greater than 90 degrees (only set flag, never clear it)
-           /* if (pose.theta > 91) {
+            if (pose.theta > 91) {
                 thetaExceeded90 = true;
             }
             
@@ -161,12 +191,12 @@ void autonomous() {
                 pros::screen::print(pros::E_TEXT_MEDIUM, 3, "WARNING: Theta > 91!");
             } else {
                 pros::screen::print(pros::E_TEXT_MEDIUM, 3, ""); // Clear the warning
-            }*/
+            }
             
             pros::delay(20); // Update every 100ms
         }
     });
-    //odomTest();
+    odomTest();
     //simpleQual();
     //soloWinPoint();
     //leftElim();

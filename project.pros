@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "distance_test",
+    "project_name": "odom_test",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -592,7 +592,7 @@
       }
     },
     "upload_options": {
-      "description": "distance_test",
+      "description": "odom _test",
       "slot": 1
     },
     "use_early_access": false
