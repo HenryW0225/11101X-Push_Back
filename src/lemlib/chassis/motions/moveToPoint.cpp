@@ -76,7 +76,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
 
         // calculate error
         const float adjustedRobotTheta = params.forwards ? pose.theta : pose.theta + M_PI;
-        const float headingError = angleError(adjustedRobotTheta, pose.angle(target));
+        const float headingError = angleError(adjustedRobotTheta, target.theta);
         float lateralError = pose.distance(target) * cos(angleError(pose.theta, pose.angle(target)));
 
         // update exit conditions
@@ -86,7 +86,10 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         // get output from PIDs
         float lateralOut = lateralPID.update(lateralError);
         float headingOut = headingPID.update(radToDeg(headingError));
-        if (distTarget < min(12.0, initialDistance/2)) headingOut = 0;
+        float headingScale = std::clamp(distTarget / 24.0f, 0.2f, 1.0f);
+        headingOut *= headingScale;
+
+
 
         // apply restrictions on heading speed
         headingOut = std::clamp(headingOut, -params.maxSpeed, params.maxSpeed);

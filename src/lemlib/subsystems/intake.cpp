@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/motors.h"
 
 Intake::Intake(pros::Motor bottomIntakeMotors, pros::Motor topIntakeMotors, pros::Optical colorSensor, pros::adi::DigitalOut intakePneumatic)
     : bottomIntakeMotors(bottomIntakeMotors),
@@ -10,7 +11,7 @@ void Intake::calibrate(bool red) {
     colorSortActive = true;
     intakePneumaticV(0);
     intakePneumaticActive = true;
-    topIntakeMotors.set_brake_mode(MOTOR_BRAKE_COAST);
+    topIntakeMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     //if (red) { redColorSort(); }
     //else { blueColorSort(); }
 }

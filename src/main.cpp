@@ -40,7 +40,7 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(4.067, // (kP)
+lemlib::ControllerSettings linearController(4.2, // (kP) 4.067
                                             0, // (kI)
                                             4, // (kD)
                                             0, //
@@ -48,32 +48,32 @@ lemlib::ControllerSettings linearController(4.067, // (kP)
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
                                             300, // large error range timeout, in milliseconds
-                                            15 // maximum acceleration (slew)
+                                            13 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.7, // (kP)
+lemlib::ControllerSettings angularController(1.6, // (kP)1.7 1.6
                                              0, // (kI)
-                                             11, // (kD)
+                                            11, // (kD)11 10.5
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
+                                             2, // large error range, in degrees
                                              500, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(0.5, // (kP) 2
+lemlib::ControllerSettings headingController(1.75, // (kP) 2 1
                                              0, // (kI)
-                                             30, // (kD) 20
+                                             20, // (kD) 20 1
                                              0, // anti windup
-                                             1, // small error range, in degrees
+                                             0.8, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
                                              3, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
+                                             300, // large error range timeout, in milliseconds
+                                             15 // maximum acceleration (slew)
 );
 
 lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
@@ -87,7 +87,7 @@ lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angularControllerShort(1.85, // (kP) 2
+lemlib::ControllerSettings angularControllerShort(1.9, // (kP) 2
                                              0, // (kI)
                                              11, // (kD) 20
                                              0, // anti windup
@@ -167,7 +167,7 @@ void competitionInitialize() {}
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
-    chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
     intake.driverControl = false;
     intake.intakeJam(true);
@@ -177,9 +177,10 @@ void autonomous() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
             lemlib::Pose pose = chassis.getPose();
-            //pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
-            //pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "theta: %.2f", pose.theta);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
+           // pros::screen::print(pros::E_TEXT_MEDIUM, 3, "left voltage: %.2f", leftMotors.get_voltage_all());
             
             // Check if theta is greater than 90 degrees (only set flag, never clear it)
             if (pose.theta > 91) {
@@ -196,9 +197,9 @@ void autonomous() {
             pros::delay(20); // Update every 100ms
         }
     });
-    odomTest();
+    //odomTest();
     //simpleQual();
-    //soloWinPoint();
+    soloWinPoint();
     //leftElim();
     //rightElim();
     //skills();
@@ -212,7 +213,12 @@ void opcontrol() {
         int vert = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int horz = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
         chassis.arcade(vert, horz);
-
+        for (size_t i = 0; i < 3; i++) {
+            pros::screen::print(pros::E_TEXT_MEDIUM, i + 1, "left[%d]: %.2i", i, leftMotors.get_voltage(i));
+        }
+        for (size_t i = 0; i < 3; i++) {
+            pros::screen::print(pros::E_TEXT_MEDIUM, i + 4, "right[%d]: %.2i", i, rightMotors.get_voltage(i));
+        }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.scoreHighGoal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtakeBlock(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intakeBlock(); }

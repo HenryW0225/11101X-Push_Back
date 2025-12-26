@@ -1,8 +1,13 @@
+#include "lemlib/chassis/odom.hpp"
+#include "lemlib/subsystems/intake.hpp"
+#include "lemlib/timer.hpp"
 #include "main.h"
+#include "pros/device.hpp"
+#include "pros/rtos.hpp"
 //
 
 void odomTest() {
-   /* chassis.setPose(0, 0, 0);
+    /*chassis.setPose(0, 0, 0);
     pros::Task printCoordsTask([]() {
         while (true) {
             lemlib::Pose pose = chassis.getPose();
@@ -23,24 +28,34 @@ void odomTest() {
         pros::delay(50);
         error = chassis.resetAngleWithSelfCorrectionInches();
     }*/
-
-    chassis.turnToHeading(90, 5000);
-    /*pros::delay(4000);
+    //chassis.moveToPoint(0, 48, 4000);
+    //chassis.turnToHeading(90, 5000);
+   /* chassisShort.turnToHeading(45, 5000);
+    pros::delay(4000);
     chassisShort.turnToHeading(90, 5000);
     pros::delay(4000);
     chassis.turnToHeading(180, 5000);*/
-    
+    //chassis.turnToPoint(-48,0, 5000);
 
     //chassis.turnToPoint(48, 0, 5000);
     //chassis.moveToPoint(0, 48, 5000);
-    /*chassis.moveToPoint(0, 48, 5000);
-    chassis.turnToPoint(48, 48, 3000);
+    /*chassis.setPose(0,0,0);
+    chassis.moveToPoint(0, 48, 5000);
+    pros::delay(200);
+    chassis.turnToPoint(48, 48, 5000);
+    pros::delay(200);
     chassis.moveToPoint(48, 48, 5000);
+    pros::delay(200);
     chassis.turnToPoint(48, 0, 3000);
+    pros::delay(200);
     chassis.moveToPoint(48, 0, 5000);
+    pros::delay(200);
     chassis.turnToPoint(0, 0, 3000);
+    pros::delay(200);
     chassis.moveToPoint(0, 0, 5000);
-    chassis.turnToPoint(0, 48, 3000);*/
+    pros::delay(200);
+    chassis.turnToHeading(0, 3000);*/
+    
 }
 void simpleQual() {
         chassis.setPose(9.5, 1.7, 0);
@@ -264,20 +279,44 @@ void rightElim() {
 
 void soloWinPoint() {
         //new swp
-        chassis.setPose(17.5, -0.375, 90);
+        chassis.setPose(20, -3.5, 90);
+        chassis.moveToPoint(46, -3.5, 2000, {.minSpeed = 20});
         intake.intakeBlock();
-        chassis.moveToPoint(46, -0.375, 2000, {.minSpeed = 20, .earlyExitRange = 1});
-        chassis.turnToPoint(47, -16, 2000, {.minSpeed = 20}, false);
+        chassis.turnToPoint(49, -13, 2000,{.minSpeed=20});
         matchload.matchloadV(1);
-        chassis.moveToPoint(47, -16, 1000, {.maxSpeed = 65, .minSpeed = 60});
-        pros::delay(1000);
+        chassis.moveToPoint(49, -13, 1000, {.maxSpeed = 65, .minSpeed = 60});
+        pros::delay(650);
         //matchload #1
-        chassis.moveToPoint(47.5, 20, 2000, {.forwards = false, .minSpeed = 15});
+        chassis.moveToPoint(47.5, 20, 2000, {.forwards = false, .minSpeed = 20});
         pros::delay(1000);
         matchload.matchloadV(0);
         intake.scoreHighGoal();
-        pros::delay(1300);
-        intake.stopIntake();
+        pros::delay(1200);
+        intake.intakeBlock();
+        
+        chassis.turnToPoint(30, 26, 2000, {.minSpeed = 20}, false);
+        lemlib::Timer timer(0);
+        timer.pause();
+        chassis.moveToPoint(30, 24, 2000, {.minSpeed = 40, .earlyExitRange = 3}, false);
+        timer.resume();
+        timer.waitUntilDone();
+        matchload.matchloadV(1);
+
+        pros::delay(200);
+        matchload.matchloadV(0);
+
+        lemlib::Timer timer1(20);
+        timer1.pause();
+        chassis.moveToPoint(-18, 18, 2000, {.minSpeed = 40,.earlyExitRange = 5}, false);
+        timer1.resume();
+        timer1.waitUntilDone();
+        matchload.matchloadV(1);
+
+        chassisShort.turnToPoint(-8,37.5 , 2000, {.forwards = false, .minSpeed = 20});
+        chassisShort.moveToPoint(-8,37.5 , 2000, {.forwards = false, .minSpeed = 30});
+        intake.intakePneumaticV(0);
+        intake.intakeOut();
+
         //high goal #1
         /*chassis.turnToPoint(-24, 24, 2000, {.minSpeed = 30, .earlyExitRange = 4});
         intake.intakeBlock();

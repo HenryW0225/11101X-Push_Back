@@ -24,6 +24,7 @@
  * E_CONTROLLER_MASTER is pedantically correct within the PROS styleguide, but
  * not convenient for most student programmers.
  */
+#include "lemlib/chassis/chassis.hpp"
 #define PROS_USE_SIMPLE_NAMES
 
 /**
@@ -91,6 +92,7 @@ extern lemlib::Chassis chassis; //normal
 extern lemlib::Chassis chassisLong; //long turn
 extern lemlib::Chassis chassisShort; //short turn
 extern lemlib::Chassis chassisSwing; //swing pid
+extern lemlib::Chassis chassisReverse; //reverse drive 
 extern Intake intake;
 extern Matchload matchload;
 extern Wing wing;
