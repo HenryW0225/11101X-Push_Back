@@ -1,4 +1,5 @@
 #include "main.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/odom.hpp"
 #include "pros/distance.hpp"
 #include "pros/motors.h"
@@ -48,11 +49,11 @@ lemlib::ControllerSettings linearController(4.2, // (kP) 4.067
                                             100, // small error range timeout, in milliseconds
                                             3, // large error range, in inches
                                             300, // large error range timeout, in milliseconds
-                                            13 // maximum acceleration (slew)
+                                            10 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.6, // (kP)1.7 1.6
+lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
                                              0, // (kI)
                                             11, // (kD)11 10.5
                                              0, // anti windup
@@ -65,15 +66,15 @@ lemlib::ControllerSettings angularController(1.6, // (kP)1.7 1.6
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(1.75, // (kP) 2 1
+lemlib::ControllerSettings headingController(0.8, // (kP) 2 1
                                              0, // (kI)
-                                             20, // (kD) 20 1
+                                             11, // (kD) 20 1
                                              0, // anti windup
-                                             0.8, // small error range, in degrees
+                                             1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
-                                             300, // large error range timeout, in milliseconds
-                                             15 // maximum acceleration (slew)
+                                             2, // large error range, in degrees
+                                             500, // large error range timeout, in milliseconds
+                                             0 // maximum acceleration (slew)
 );
 
 lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
@@ -87,7 +88,7 @@ lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angularControllerShort(1.9, // (kP) 2
+lemlib::ControllerSettings angularControllerShort(1.9 , // (kP) 2
                                              0, // (kI)
                                              11, // (kD) 20
                                              0, // anti windup
@@ -98,13 +99,13 @@ lemlib::ControllerSettings angularControllerShort(1.9, // (kP) 2
                                              0 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angularControllerSwing(3, // (kP) 2
+lemlib::ControllerSettings angularControllerSwing(2.2, // (kP) 2
                                              0, // (kI)
-                                             20, // (kD) 20
+                                             11, // (kD) 20
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
+                                             2, // large error range, in degrees
                                              500, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
@@ -134,11 +135,12 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
 
-lemlib::Chassis chassisSwing(drivetrain, linearController, angularControllerSwing, headingController, sensors);
+lemlib::Chassis chassisSwing(drivetrain, linearController, angularController, angularControllerSwing, sensors);
 
 lemlib::Chassis chassisShort(drivetrain, linearController, angularControllerShort, headingController, sensors);
 
 lemlib::Chassis chassisLong(drivetrain, linearController, angularControllerLong, headingController, sensors);
+
 
 
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
@@ -213,12 +215,7 @@ void opcontrol() {
         int vert = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int horz = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
         chassis.arcade(vert, horz);
-        for (size_t i = 0; i < 3; i++) {
-            pros::screen::print(pros::E_TEXT_MEDIUM, i + 1, "left[%d]: %.2i", i, leftMotors.get_voltage(i));
-        }
-        for (size_t i = 0; i < 3; i++) {
-            pros::screen::print(pros::E_TEXT_MEDIUM, i + 4, "right[%d]: %.2i", i, rightMotors.get_voltage(i));
-        }
+       
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.scoreHighGoal(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtakeBlock(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intakeBlock(); }

@@ -86,8 +86,14 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         // get output from PIDs
         float lateralOut = lateralPID.update(lateralError);
         float headingOut = headingPID.update(radToDeg(headingError));
-        float headingScale = std::clamp(distTarget / 24.0f, 0.2f, 1.0f);
-        headingOut *= headingScale;
+        float minHeadingPower = 4.0; // The lowest power that actually moves your bot
+        if (std::fabs(radToDeg(headingError)) > 0.3) { // Only nudge if error is > 0.3 degrees
+            if (std::fabs(headingOut) < minHeadingPower) {
+                headingOut = (headingOut > 0) ? minHeadingPower : -minHeadingPower;
+            }
+        }
+        //float headingScale = std::clamp(distTarget / 24.0f, 0.4f, 1.0f);
+        //headingOut *= headingScale;
 
 
 
