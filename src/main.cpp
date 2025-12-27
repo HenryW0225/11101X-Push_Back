@@ -77,6 +77,42 @@ lemlib::ControllerSettings headingController(0.8, // (kP) 2 1
                                              0 // maximum acceleration (slew)
 );
 
+// extra lateral motion controller
+lemlib::ControllerSettings linearControllerExtra(4.2, // (kP) 4.067
+                                                 0, // (kI)
+                                                 4, // (kD)
+                                                 0, //
+                                                 0.8, // small error range, in inches
+                                                 100, // small error range timeout, in milliseconds
+                                                 3, // large error range, in inches
+                                                 300, // large error range timeout, in milliseconds
+                                                 10 // maximum acceleration (slew)
+);
+
+// extra angular motion controller
+lemlib::ControllerSettings angularControllerExtra(1.65 , // (kP)1.7 1.6
+                                                  0, // (kI)
+                                                  11, // (kD)11 10.5
+                                                  0, // anti windup
+                                                  1, // small error range, in degrees
+                                                  100, // small error range timeout, in milliseconds
+                                                  2, // large error range, in degrees
+                                                  500, // large error range timeout, in milliseconds
+                                                  0 // maximum acceleration (slew)
+);
+
+// extra heading motion controller
+lemlib::ControllerSettings headingControllerExtra(2, // (kP) 2 1
+                                                  0, // (kI)
+                                                  11, // (kD) 20 1
+                                                  0, // anti windup
+                                                  1, // small error range, in degrees
+                                                  100, // small error range timeout, in milliseconds
+                                                  2, // large error range, in degrees
+                                                  500, // large error range timeout, in milliseconds
+                                                  0 // maximum acceleration (slew)
+);
+/*
 lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
                                              0, // (kI)
                                              20, // (kD) 20
@@ -109,7 +145,7 @@ lemlib::ControllerSettings angularControllerSwing(2.2, // (kP) 2
                                              500, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
-
+*/
 // sensors for odometry
 lemlib::OdomSensors sensors(&vertical, 
                             nullptr, 
@@ -133,15 +169,7 @@ lemlib::ExpoDriveCurve steerCurve(10, // joystick deadband out of 127
 );
 
 // create the chassis
-lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, sensors);
-
-lemlib::Chassis chassisSwing(drivetrain, linearController, angularController, angularControllerSwing, sensors);
-
-lemlib::Chassis chassisShort(drivetrain, linearController, angularControllerShort, headingController, sensors);
-
-lemlib::Chassis chassisLong(drivetrain, linearController, angularControllerLong, headingController, sensors);
-
-
+lemlib::Chassis chassis(drivetrain, linearController, angularController, headingController, linearControllerExtra, angularControllerExtra, headingControllerExtra, sensors);
 
 Intake intake(bottomIntakeMotors, topIntakeMotors, colorSensor, intakePneumatic);
 

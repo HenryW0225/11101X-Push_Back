@@ -29,11 +29,15 @@ lemlib::Drivetrain::Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* r
       horizontalDrift(horizontalDrift) {}
 
 lemlib::Chassis::Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings,
+                         ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
                          OdomSensors sensors, DriveCurve* throttleCurve, DriveCurve* steerCurve)
     : drivetrain(drivetrain),
       lateralSettings(linearSettings),
       angularSettings(angularSettings),
       headingSettings(angularSettings), // Use angularSettings for heading when not specified
+      lateralSettingsExtra(linearSettingsExtra),
+      angularSettingsExtra(angularSettingsExtra),
+      headingSettingsExtra(headingSettingsExtra),
       sensors(sensors),
       throttleCurve(throttleCurve),
       steerCurve(steerCurve),
@@ -48,11 +52,15 @@ lemlib::Chassis::Chassis(Drivetrain drivetrain, ControllerSettings linearSetting
       headingSmallExit(angularSettings.smallError, angularSettings.smallErrorTimeout) {} // Use angularSettings for heading exit conditions
 
 lemlib::Chassis::Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
+                         ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
                          OdomSensors sensors, DriveCurve* throttleCurve, DriveCurve* steerCurve)
     : drivetrain(drivetrain),
       lateralSettings(linearSettings),
       angularSettings(angularSettings),
       headingSettings(headingSettings),
+      lateralSettingsExtra(linearSettingsExtra),
+      angularSettingsExtra(angularSettingsExtra),
+      headingSettingsExtra(headingSettingsExtra),
       sensors(sensors),
       throttleCurve(throttleCurve),
       steerCurve(steerCurve),

@@ -17,11 +17,21 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         return;
     }
 
-    // reset PIDs and exit conditions
-    lateralPID.reset();
-    lateralLargeExit.reset();
-    lateralSmallExit.reset();
-    headingPID.reset();
+    // select PID settings based on pidSelector
+    ControllerSettings selectedLateralSettings = (params.pidSelector == 0) ? lateralSettings : lateralSettingsExtra;
+    ControllerSettings selectedHeadingSettings = (params.pidSelector == 0) ? headingSettings : headingSettingsExtra;
+
+    // create local PIDs and exit conditions
+    PID localLateralPID(selectedLateralSettings.kP, selectedLateralSettings.kI, selectedLateralSettings.kD, selectedLateralSettings.windupRange, true);
+    PID localHeadingPID(selectedHeadingSettings.kP, selectedHeadingSettings.kI, selectedHeadingSettings.kD, selectedHeadingSettings.windupRange, true);
+    ExitCondition localLateralLargeExit(selectedLateralSettings.largeError, selectedLateralSettings.largeErrorTimeout);
+    ExitCondition localLateralSmallExit(selectedLateralSettings.smallError, selectedLateralSettings.smallErrorTimeout);
+
+    // reset local PIDs and exit conditions
+    localLateralPID.reset();
+    localLateralLargeExit.reset();
+    localLateralSmallExit.reset();
+    localHeadingPID.reset();
 
     // initialize vars used between iterations
     Pose lastPose = getPose();
@@ -40,7 +50,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
     bool first = true;
 
     // main loop
-    while (!timer.isDone() && ((!lateralSmallExit.getExit() && !lateralLargeExit.getExit()) || !close) &&
+    while (!timer.isDone() && ((!localLateralSmallExit.getExit() && !localLateralLargeExit.getExit()) || !close) &&
            this->motionRunning) {
         // update position
         const Pose pose = getPose(true, true);
@@ -80,12 +90,12 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         float lateralError = pose.distance(target) * cos(angleError(pose.theta, pose.angle(target)));
 
         // update exit conditions
-        lateralSmallExit.update(lateralError);
-        lateralLargeExit.update(lateralError);
+        localLateralSmallExit.update(lateralError);
+        localLateralLargeExit.update(lateralError);
 
         // get output from PIDs
-        float lateralOut = lateralPID.update(lateralError);
-        float headingOut = headingPID.update(radToDeg(headingError));
+        float lateralOut = localLateralPID.update(lateralError);
+        float headingOut = localHeadingPID.update(radToDeg(headingError));
         float minHeadingPower = 4.0; // The lowest power that actually moves your bot
         if (std::fabs(radToDeg(headingError)) > 0.3) { // Only nudge if error is > 0.3 degrees
             if (std::fabs(headingOut) < minHeadingPower) {
@@ -99,13 +109,13 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
 
         // apply restrictions on heading speed
         headingOut = std::clamp(headingOut, -params.maxSpeed, params.maxSpeed);
-        headingOut = slew(headingOut, prevHeadingOut, headingSettings.slew);
+        headingOut = slew(headingOut, prevHeadingOut, selectedHeadingSettings.slew);
 
         // apply restrictions on lateral speed
         lateralOut = std::clamp(lateralOut, -params.maxSpeed, params.maxSpeed);
         // constrain lateral output by max accel
         // but not for decelerating, since that would interfere with settling
-        if (!close) lateralOut = slew(lateralOut, prevLateralOut, lateralSettings.slew);
+        if (!close) lateralOut = slew(lateralOut, prevLateralOut, selectedLateralSettings.slew);
 
         // prevent moving in the wrong direction
         if (params.forwards && !close) lateralOut = std::fmax(lateralOut, 0);

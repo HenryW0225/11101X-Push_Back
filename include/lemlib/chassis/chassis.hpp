@@ -301,6 +301,8 @@ struct MoveToPointParams {
         /** distance between the robot and target point where the movement will exit. Only has an effect if minSpeed is
          * non-zero.*/
         float earlyExitRange = 0;
+        /** PID selector: 0 for normal PID values, 1 for extra PID values. 0 by default */
+        int pidSelector = 0;
 };
 
 // default drive curve
@@ -317,6 +319,9 @@ class Chassis {
          * @param drivetrain drivetrain to be used for the chassis
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
+         * @param lateralSettingsExtra extra settings for the lateral controller
+         * @param angularSettingsExtra extra settings for the angular controller
+         * @param headingSettingsExtra extra settings for the heading controller
          * @param sensors sensors to be used for odometry
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
@@ -324,6 +329,7 @@ class Chassis {
          * @example main.cpp
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings,
+                ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
@@ -333,6 +339,9 @@ class Chassis {
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
          * @param headingSettings settings for the heading controller (used in drive functions)
+         * @param lateralSettingsExtra extra settings for the lateral controller
+         * @param angularSettingsExtra extra settings for the angular controller
+         * @param headingSettingsExtra extra settings for the heading controller
          * @param sensors sensors to be used for odometry
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
@@ -340,11 +349,8 @@ class Chassis {
          * @example main.cpp
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
+                ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
-                DriveCurve* steerCurve = &defaultDriveCurve);
-
-        Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
-                OdomSensors sensors, pros::Distance distance, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
          * @brief Calibrate the chassis sensors. THis should be called in the initialize function
@@ -679,6 +685,9 @@ class Chassis {
          * // move the robot to x = 7.5, y = 7.5 with a timeout of 4000ms
          * // with a minSpeed of 60, and exit the movement if the robot is within 5 inches of the target
          * chassis.moveToPoint(7.5, 7.5, 4000, {.minSpeed = 60, .earlyExitRange = 5});
+         * // move the robot to x = 5, y = 5 with a timeout of 4000ms
+         * // using the extra PID settings (pidSelector = 1)
+         * chassis.moveToPoint(5, 5, 4000, {.pidSelector = 1});
          * @endcode
          */
         void moveToPoint(float x, float y, int timeout, MoveToPointParams params = {}, bool async = true);
@@ -902,6 +911,7 @@ class Chassis {
          */
         void resetWithDistance(double wall);
         double resetAngleWithSelfCorrectionInches();
+       
         PID lateralPID;
         /**
          * PIDs are exposed so advanced users can implement things like gain scheduling
@@ -917,7 +927,6 @@ class Chassis {
          * @warning Do not interact with these unless you know what you are doing
          */
         PID headingPID;
-        ControllerSettings headingSettings;
     protected:
         /**
          * @brief Indicates that this motion is queued and blocks current task until this motion reaches front of queue
@@ -935,6 +944,10 @@ class Chassis {
 
         ControllerSettings lateralSettings;
         ControllerSettings angularSettings;
+        ControllerSettings headingSettings;
+        ControllerSettings lateralSettingsExtra;
+        ControllerSettings angularSettingsExtra;
+        ControllerSettings headingSettingsExtra;
 
         Drivetrain drivetrain;
         OdomSensors sensors;
