@@ -90,7 +90,7 @@ lemlib::ControllerSettings linearControllerExtra(4.2, // (kP) 4.067
 );
 
 // extra angular motion controller
-lemlib::ControllerSettings angularControllerExtra(1.65 , // (kP)1.7 1.6
+lemlib::ControllerSettings angularControllerExtra(1.9 , // (kP)1.7 1.6
                                                   0, // (kI)
                                                   11, // (kD)11 10.5
                                                   0, // anti windup
@@ -102,7 +102,7 @@ lemlib::ControllerSettings angularControllerExtra(1.65 , // (kP)1.7 1.6
 );
 
 // extra heading motion controller
-lemlib::ControllerSettings headingControllerExtra(2, // (kP) 2 1
+lemlib::ControllerSettings headingControllerExtra(3, // (kP) 2 1
                                                   0, // (kI)
                                                   11, // (kD) 20 1
                                                   0, // anti windup
@@ -210,6 +210,7 @@ void autonomous() {
             pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
             pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
             pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
+            pros::screen::print(pros::E_TEXT_MEDIUM, 4, "intake temp: %.2f", intake.intakeTemperature());
            // pros::screen::print(pros::E_TEXT_MEDIUM, 3, "left voltage: %.2f", leftMotors.get_voltage_all());
             
             // Check if theta is greater than 90 degrees (only set flag, never clear it)

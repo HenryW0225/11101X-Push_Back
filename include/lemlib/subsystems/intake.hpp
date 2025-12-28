@@ -41,6 +41,10 @@ class Intake {
 
         void intakeOut();
 
+        void intakeOutAuton();
+
+        double intakeTemperature();
+
         //intake jam functions
 
         void intakeJam(bool async);

@@ -1,23 +1,14 @@
 #include <cmath>
+#include <optional>
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/logger/logger.hpp"
 #include "lemlib/timer.hpp"
 #include "lemlib/util.hpp"
+#include "main.h"
 #include "pros/misc.hpp"
+using namespace std;
 
 void lemlib::Chassis::turnToPoint(float x, float y, int timeout, TurnToPointParams params, bool async) {
-    /*drivetrain.leftMotors->move(10);
-    drivetrain.rightMotors->move(-10);
-    Pose pose = getPose();
-    while (pose.theta < 90) {
-        pros::delay(10);
-        pose = getPose();
-    }
-    drivetrain.leftMotors->move(0);
-    drivetrain.rightMotors->move(0);*/
-
-
-
     params.minSpeed = std::abs(params.minSpeed);
     this->requestMotionStart();
     // were all motions cancelled?
@@ -29,23 +20,34 @@ void lemlib::Chassis::turnToPoint(float x, float y, int timeout, TurnToPointPara
         pros::delay(10); // delay to give the task time to start
         return;
     }
+
+    // select PID settings based on pidSelector
+    ControllerSettings selectedAngularSettings = (params.pidSelector == 0) ? angularSettings : angularSettingsExtra;
+
+    // create local PIDs and exit conditions
+    PID localAngularPID(selectedAngularSettings.kP, selectedAngularSettings.kI, selectedAngularSettings.kD, selectedAngularSettings.windupRange, true);
+    ExitCondition localAngularLargeExit(selectedAngularSettings.largeError, selectedAngularSettings.largeErrorTimeout);
+    ExitCondition localAngularSmallExit(selectedAngularSettings.smallError, selectedAngularSettings.smallErrorTimeout);
+
+    // reset local PIDs and exit conditions
+    localAngularPID.reset();
+    localAngularLargeExit.reset();
+    localAngularSmallExit.reset();
+
     float targetTheta;
     float deltaX, deltaY, deltaTheta;
     float motorPower;
     float prevMotorPower = 0;
     float startTheta = getPose().theta;
     bool settling = false;
-    std::optional<float> prevRawDeltaTheta = std::nullopt;
-    std::optional<float> prevDeltaTheta = std::nullopt;
+    optional<float> prevRawDeltaTheta = nullopt;
+    optional<float> prevDeltaTheta = nullopt;
     std::uint8_t compState = pros::competition::get_status();
     distTraveled = 0;
     Timer timer(timeout);
-    angularLargeExit.reset();
-    angularSmallExit.reset();
-    angularPID.reset();
 
     // main loop
-    while (!timer.isDone() && !angularLargeExit.getExit() && !angularSmallExit.getExit() && this->motionRunning) {
+    while (!timer.isDone() && !localAngularLargeExit.getExit() && !localAngularSmallExit.getExit() && this->motionRunning) {
         // update variables
         Pose pose = getPose();
         pose.theta = (params.forwards) ? fmod(pose.theta, 360) : fmod(pose.theta - 180, 360);
@@ -59,28 +61,28 @@ void lemlib::Chassis::turnToPoint(float x, float y, int timeout, TurnToPointPara
 
         // check if settling
         const float rawDeltaTheta = angleError(targetTheta, pose.theta, false);
-        if (prevRawDeltaTheta == std::nullopt) prevRawDeltaTheta = rawDeltaTheta;
+        if (prevRawDeltaTheta == nullopt) prevRawDeltaTheta = rawDeltaTheta;
         if (sgn(rawDeltaTheta) != sgn(prevRawDeltaTheta)) settling = true;
         prevRawDeltaTheta = rawDeltaTheta;
 
         // calculate deltaTheta
         if (settling) deltaTheta = angleError(targetTheta, pose.theta, false);
         else deltaTheta = angleError(targetTheta, pose.theta, false, params.direction);
-        if (prevDeltaTheta == std::nullopt) prevDeltaTheta = deltaTheta;
+        if (prevDeltaTheta == nullopt) prevDeltaTheta = deltaTheta;
 
         // motion chaining
         if (params.minSpeed != 0 && fabs(deltaTheta) < params.earlyExitRange) break;
         if (params.minSpeed != 0 && sgn(deltaTheta) != sgn(prevDeltaTheta)) break;
 
         // calculate the speed
-        motorPower = angularPID.update(deltaTheta);
-        angularLargeExit.update(deltaTheta);
-        angularSmallExit.update(deltaTheta);
+        motorPower = localAngularPID.update(deltaTheta);
+        localAngularLargeExit.update(deltaTheta);
+        localAngularSmallExit.update(deltaTheta);
 
         // cap the speed
         if (motorPower > params.maxSpeed) motorPower = params.maxSpeed;
         else if (motorPower < -params.maxSpeed) motorPower = -params.maxSpeed;
-        if (fabs(deltaTheta) > 20) motorPower = slew(motorPower, prevMotorPower, angularSettings.slew);
+        if (fabs(deltaTheta) > 20) motorPower = slew(motorPower, prevMotorPower, selectedAngularSettings.slew);
         if (motorPower < 0 && motorPower > -params.minSpeed) motorPower = -params.minSpeed;
         else if (motorPower > 0 && motorPower < params.minSpeed) motorPower = params.minSpeed;
         prevMotorPower = motorPower;

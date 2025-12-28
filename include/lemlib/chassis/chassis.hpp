@@ -176,6 +176,8 @@ struct TurnToPointParams {
         /** angle between the robot and target point where the movement will exit. Only has an effect if minSpeed is
          * non-zero.*/
         float earlyExitRange = 0;
+        /** PID selector: 0 for normal PID values, 1 for extra PID values. 0 by default */
+        int pidSelector = 0;
 };
 
 /**
@@ -517,6 +519,9 @@ class Chassis {
          * // turn the robot to face the point x = 7.5, y = 7.5 with a timeout of 2000ms
          * // and a minSpeed of 60, and exit the movement if the robot is within 5 degrees of the target
          * chassis.turnToPoint(7.5, 7.5, 2000, {.minSpeed = 60, .earlyExitRange = 5});
+         * // turn the robot to face the point x = 5, y = 5 with a timeout of 1000ms
+         * // using extra PID constants
+         * chassis.turnToPoint(5, 5, 1000, {.pidSelector = 1});
          * @endcode
          */
         

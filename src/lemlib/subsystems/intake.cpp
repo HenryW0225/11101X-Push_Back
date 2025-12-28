@@ -67,7 +67,16 @@ void Intake::scoreMiddleHigh() {
 
 void Intake::intakeOut() {
     moveBottomIntake(600);
-    moveTopIntake(400);
+    moveTopIntake(600);
+}
+
+void Intake::intakeOutAuton() {
+    moveBottomIntake(200);
+    moveTopIntake(300);
+}
+
+double Intake::intakeTemperature() {
+    return bottomIntakeMotors.get_temperature();
 }
 
 void Intake::intakePneumaticChange() {
@@ -161,7 +170,7 @@ void Intake::intakeJam(bool async) {
             
             // Reverse only the bottom motors for unjamming (don't update desiredBottomVelocity)
             bottomIntakeMotors.move_velocity(-600);
-            pros::delay(200);
+            pros::delay(175);
             
             // Restore the desired bottom velocity
             // Check if desiredBottomVelocity changed during the delay (autonomous code updated it)
