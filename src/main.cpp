@@ -61,12 +61,12 @@ lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
                                              100, // small error range timeout, in milliseconds
                                              2, // large error range, in degrees
                                              500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
+                                             10 // maximum acceleration (slew)
 );
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(0.8, // (kP) 2 1
+lemlib::ControllerSettings headingController(0.6, // (kP) 2 1
                                              0, // (kI)
                                              11, // (kD) 20 1
                                              0, // anti windup
@@ -229,7 +229,8 @@ void autonomous() {
         }
     });
     //odomTest();
-    //simpleQual();
+    //leftQual();
+    //rightQual();
     soloWinPoint();
     //leftElim();
     //rightElim();

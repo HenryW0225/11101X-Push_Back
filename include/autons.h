@@ -4,10 +4,12 @@
 void odomTest();
 
 //match autons
-void simpleQual();
+void leftQual();
+void rightQual();
 void leftElim();
 void rightElim();
 void soloWinPoint();
+
 
 //skills
 void skills();

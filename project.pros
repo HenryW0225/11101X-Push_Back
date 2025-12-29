@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "sooolo",
+    "project_name": "swp",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -592,7 +592,7 @@
       }
     },
     "upload_options": {
-      "description": "odom _test",
+      "description": "swp",
       "slot": 2,
       "icon": "pros"
     },

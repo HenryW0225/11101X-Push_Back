@@ -73,6 +73,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         if (distTarget < 7.5 && close == false) {
             close = true;
             params.maxSpeed = fmax(fabs(prevLateralOut), 60);
+            params.maxSpeed = fmax(fabs(prevHeadingOut), 60);
         }
 
         // motion chaining

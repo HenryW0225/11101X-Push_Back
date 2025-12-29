@@ -83,8 +83,11 @@ void lemlib::Chassis::turnToPoint(float x, float y, int timeout, TurnToPointPara
         if (motorPower > params.maxSpeed) motorPower = params.maxSpeed;
         else if (motorPower < -params.maxSpeed) motorPower = -params.maxSpeed;
         if (fabs(deltaTheta) > 20) motorPower = slew(motorPower, prevMotorPower, selectedAngularSettings.slew);
-        if (motorPower < 0 && motorPower > -params.minSpeed) motorPower = -params.minSpeed;
-        else if (motorPower > 0 && motorPower < params.minSpeed) motorPower = params.minSpeed;
+        // enforce minimum speed only if we've reached it before
+        if (fabs(prevMotorPower) >= params.minSpeed) {
+            if (motorPower < 0 && motorPower > -params.minSpeed) motorPower = -params.minSpeed;
+            else if (motorPower > 0 && motorPower < params.minSpeed) motorPower = params.minSpeed;
+        }
         prevMotorPower = motorPower;
 
         infoSink()->debug("Turn Motor Power: {} ", motorPower);
