@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "swp",
+    "project_name": "left_middle",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -592,8 +592,8 @@
       }
     },
     "upload_options": {
-      "description": "swp",
-      "slot": 2,
+      "description": "left_middle",
+      "slot": 4,
       "icon": "pros"
     },
     "use_early_access": false

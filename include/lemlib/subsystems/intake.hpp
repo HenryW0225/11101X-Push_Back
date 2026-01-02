@@ -43,6 +43,8 @@ class Intake {
 
         void intakeOutAuton();
 
+        void intakeOutSkills();
+
         double intakeTemperature();
 
         //intake jam functions

@@ -72,7 +72,12 @@ void Intake::intakeOut() {
 
 void Intake::intakeOutAuton() {
     moveBottomIntake(600);
-    moveTopIntake(300);
+    moveTopIntake(600);
+}
+
+void Intake::intakeOutSkills() {
+    moveBottomIntake(600);
+    moveTopIntake(200);
 }
 
 double Intake::intakeTemperature() {
