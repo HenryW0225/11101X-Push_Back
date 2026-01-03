@@ -2,7 +2,7 @@
 #include "lemlib/timer.hpp"
 #include "main.h"
 #include "math.h"
-using namespace std;
+#include <optional>
 
 void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointParams params, bool async) {
     params.earlyExitRange = fabs(params.earlyExitRange);
@@ -47,20 +47,11 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
     Pose target(x, y);
     target.theta = lastPose.angle(target);
 
-    bool first = true;
-
     // main loop
     while (!timer.isDone() && ((!localLateralSmallExit.getExit() && !localLateralLargeExit.getExit()) || !close) &&
            this->motionRunning) {
         // update position
         const Pose pose = getPose(true, true);
-        
-        //get inital distance
-        double initialDistance;
-        if (first) {
-            initialDistance = pose.distance(target);
-            first = false;
-        }
 
         // update distance traveled
         distTraveled += pose.distance(lastPose);
@@ -73,7 +64,6 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         if (distTarget < 7.5 && close == false) {
             close = true;
             params.maxSpeed = fmax(fabs(prevLateralOut), 60);
-            params.maxSpeed = fmax(fabs(prevHeadingOut), 60);
         }
 
         // motion chaining
@@ -87,7 +77,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
 
         // calculate error
         const float adjustedRobotTheta = params.forwards ? pose.theta : pose.theta + M_PI;
-        const float headingError = angleError(adjustedRobotTheta, target.theta);
+        const float headingError = angleError(adjustedRobotTheta, pose.angle(target));
         float lateralError = pose.distance(target) * cos(angleError(pose.theta, pose.angle(target)));
 
         // update exit conditions
@@ -97,16 +87,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         // get output from PIDs
         float lateralOut = localLateralPID.update(lateralError);
         float headingOut = localHeadingPID.update(radToDeg(headingError));
-        float minHeadingPower = 4.0; // The lowest power that actually moves your bot
-        if (std::fabs(radToDeg(headingError)) > 0.3) { // Only nudge if error is > 0.3 degrees
-            if (std::fabs(headingOut) < minHeadingPower) {
-                headingOut = (headingOut > 0) ? minHeadingPower : -minHeadingPower;
-            }
-        }
-        //float headingScale = std::clamp(distTarget / 24.0f, 0.4f, 1.0f);
-        //headingOut *= headingScale;
-
-
+        if (close) headingOut = 0;
 
         // apply restrictions on heading speed
         headingOut = std::clamp(headingOut, -params.maxSpeed, params.maxSpeed);

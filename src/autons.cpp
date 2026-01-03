@@ -37,9 +37,10 @@ void odomTest() {
     chassis.turnToHeading(180, 5000);*/
     //chassis.calibrate(true);
     chassis.setPose(0, 0, 0);
-    //chassis.moveToPoint(0, 48, 5000);
+    //chassis.moveToPose(0, 48, 0, 5000);
+    chassis.moveToPoint(0, 48, 5000);
     //chassis.moveToPoint(0, 48, 5000, {.forwards = false});
-    chassis.turnToHeading(90, 5000);
+    //chassis.turnToHeading(90, 5000);
     //chassis.moveToPoint(0, 48, 5000);
     /*chassis.setPose(0,0,0);
     chassis.moveToPoint(0, 48, 5000);
@@ -292,13 +293,13 @@ void soloWinPoint() {
         pros::delay(925);
         chassis.moveToPoint(48.2, 13, 1500, {.minSpeed = 25, .earlyExitRange = 2});
         //chassis.swingToPoint(24, 24.4, DriveSide::RIGHT, 2000, {.maxSpeed = 100, .minSpeed = 5});
-        chassis.turnToPoint(25.5, 26.5, 1500, {.minSpeed = 15, .earlyExitRange = 1});
-        chassis.moveToPoint(25.5, 26.5, 2000,{.maxSpeed = 60, .minSpeed = 5, .earlyExitRange = 2});
+        chassis.turnToPoint(25.5, 26, 1500, {.minSpeed = 15, .earlyExitRange = 1});
+        chassis.moveToPoint(25.5, 26, 2000,{.maxSpeed = 60, .minSpeed = 5, .earlyExitRange = 2});
         intake.intakeBlock();
         intake.moveTopIntake(20);
         //chassis.moveToPoint(-24, 24.5, 2000, {.maxSpeed = 100, .pidSelector = 1});
-        chassis.turnToPoint(-24, 27, 2000, {.minSpeed = 15, .earlyExitRange = 4});
-        chassis.moveToPoint(-24, 27, 2000, {.maxSpeed = 100});
+        chassis.turnToPoint(-24, 26, 2000, {.minSpeed = 15, .earlyExitRange = 4});
+        chassis.moveToPoint(-24, 26, 2000, {.maxSpeed = 100});
         chassis.waitUntil(28.1);
         matchload.matchloadV(1);
         chassis.turnToPoint(-11.75, 37, 1500, {.forwards = false, .minSpeed = 25, .earlyExitRange = 2, .pidSelector = 1});
@@ -309,10 +310,10 @@ void soloWinPoint() {
         chassis.waitUntil(12.9);
         intake.intakePneumaticV(1);
         intake.intakeOutAuton();
-        chassis.turnToPoint(-46.8, -0.5, 800, {.minSpeed = 15, .earlyExitRange = 1});
+        chassis.turnToPoint(-46.8, -3, 800, {.minSpeed = 15, .earlyExitRange = 1});
         pros::delay(900);
         intake.stopIntake();
-        chassis.moveToPoint(-46.8, -0.5, 2000, {.maxSpeed = 105, .minSpeed = 10, .earlyExitRange = 2});
+        chassis.moveToPoint(-46.8, -3, 2000, {.maxSpeed = 105, .minSpeed = 10, .earlyExitRange = 2});
         pros::delay(300);
         intake.intakePneumaticV(0);
         intake.intakeBlock();

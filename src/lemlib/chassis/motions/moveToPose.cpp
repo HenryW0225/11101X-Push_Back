@@ -22,9 +22,9 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
     lateralPID.reset();
     lateralLargeExit.reset();
     lateralSmallExit.reset();
-    headingPID.reset();
-    headingLargeExit.reset();
-    headingSmallExit.reset();
+    angularPID.reset();
+    angularLargeExit.reset();
+    angularSmallExit.reset();
 
     // calculate target pose in standard form
     Pose target(x, y, M_PI_2 - degToRad(theta));
@@ -41,12 +41,12 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
     bool lateralSettled = false;
     bool prevSameSide = false;
     float prevLateralOut = 0; // previous lateral power
-    float prevHeadingOut = 0; // previous heading power
+    float prevAngularOut = 0; // previous angular power
     const int compState = pros::competition::get_status();
 
     // main loop
     while (!timer.isDone() &&
-           ((!lateralSettled || (!headingLargeExit.getExit() && !headingSmallExit.getExit())) || !close) &&
+           ((!lateralSettled || (!angularLargeExit.getExit() && !angularSmallExit.getExit())) || !close) &&
            this->motionRunning) {
         // update position
         const Pose pose = getPose(true, true);
@@ -83,7 +83,7 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
 
         // calculate error
         const float adjustedRobotTheta = params.forwards ? pose.theta : pose.theta + M_PI;
-        const float headingError =
+        const float angularError =
             close ? angleError(adjustedRobotTheta, target.theta) : angleError(adjustedRobotTheta, pose.angle(carrot));
         float lateralError = pose.distance(carrot);
         // only use cos when settling
@@ -95,15 +95,15 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
         // update exit conditions
         lateralSmallExit.update(lateralError);
         lateralLargeExit.update(lateralError);
-        headingSmallExit.update(radToDeg(headingError));
-        headingLargeExit.update(radToDeg(headingError));
+        angularSmallExit.update(radToDeg(angularError));
+        angularLargeExit.update(radToDeg(angularError));
 
         // get output from PIDs
         float lateralOut = lateralPID.update(lateralError);
-        float headingOut = headingPID.update(radToDeg(headingError));
+        float angularOut = angularPID.update(radToDeg(angularError));
 
-        // apply restrictions on heading speed
-        headingOut = std::clamp(headingOut, -params.maxSpeed, params.maxSpeed);
+        // apply restrictions on angular speed
+        angularOut = std::clamp(angularOut, -params.maxSpeed, params.maxSpeed);
 
         // apply restrictions on lateral speed
         lateralOut = std::clamp(lateralOut, -params.maxSpeed, params.maxSpeed);
@@ -116,8 +116,8 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
         const float radius = 1 / fabs(getCurvature(pose, carrot));
         const float maxSlipSpeed(sqrt(params.horizontalDrift * radius * 9.8));
         lateralOut = std::clamp(lateralOut, -maxSlipSpeed, maxSlipSpeed);
-        // prioritize heading movement over lateral movement
-        const float overturn = fabs(headingOut) + fabs(lateralOut) - params.maxSpeed;
+        // prioritize angular movement over lateral movement
+        const float overturn = fabs(angularOut) + fabs(lateralOut) - params.maxSpeed;
         if (overturn > 0) lateralOut -= lateralOut > 0 ? overturn : -overturn;
 
         // prevent moving in the wrong direction
@@ -130,14 +130,14 @@ void lemlib::Chassis::moveToPose(float x, float y, float theta, int timeout, Mov
             lateralOut = -fabs(params.minSpeed);
 
         // update previous output
-        prevHeadingOut = headingOut;
+        prevAngularOut = angularOut;
         prevLateralOut = lateralOut;
 
-        infoSink()->debug("lateralOut: {} headingOut: {}", lateralOut, headingOut);
+        infoSink()->debug("lateralOut: {} angularOut: {}", lateralOut, angularOut);
 
         // ratio the speeds to respect the max speed
-        float leftPower = lateralOut + headingOut;
-        float rightPower = lateralOut - headingOut;
+        float leftPower = lateralOut + angularOut;
+        float rightPower = lateralOut - angularOut;
         const float ratio = std::max(std::fabs(leftPower), std::fabs(rightPower)) / params.maxSpeed;
         if (ratio > 1) {
             leftPower /= ratio;

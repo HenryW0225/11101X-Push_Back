@@ -41,7 +41,7 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(4.2, // (kP) 4.067
+lemlib::ControllerSettings linearController(4.2, // (kP) 4.2
                                             0, // (kI)
                                             4, // (kD)
                                             0, //
@@ -55,7 +55,7 @@ lemlib::ControllerSettings linearController(4.2, // (kP) 4.067
 // angular motion controller
 lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
                                              0, // (kI)
-                                            11, // (kD)11 10.5
+                                             11, // (kD)11 10.5
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -66,15 +66,15 @@ lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(0.6, // (kP) 2 1
+lemlib::ControllerSettings headingController(0.2, // (kP) 2 1
                                              0, // (kI)
-                                             11, // (kD) 20 1
+                                             8, // (kD) 20 1
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
                                              2, // large error range, in degrees
                                              500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
+                                             10 // maximum acceleration (slew)
 );
 
 // extra lateral motion controller
@@ -102,15 +102,15 @@ lemlib::ControllerSettings angularControllerExtra(1.9 , // (kP)1.7 1.6
 );
 
 // extra heading motion controller
-lemlib::ControllerSettings headingControllerExtra(3, // (kP) 2 1
+lemlib::ControllerSettings headingControllerExtra(4, // (kP) 2 1
                                                   0, // (kI)
-                                                  11, // (kD) 20 1
+                                                  20, // (kD) 20 1
                                                   0, // anti windup
                                                   1, // small error range, in degrees
                                                   100, // small error range timeout, in milliseconds
                                                   2, // large error range, in degrees
                                                   500, // large error range timeout, in milliseconds
-                                                  0 // maximum acceleration (slew)
+                                                  10 // maximum acceleration (slew)
 );
 /*
 lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
@@ -229,9 +229,9 @@ void autonomous() {
         }
     });
     //odomTest();
-    leftQual();
+    //leftQual();
     //rightQual();
-    //soloWinPoint();
+    soloWinPoint();
     //leftElim();
     //rightElim();
     //skills();
