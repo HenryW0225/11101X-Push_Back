@@ -1,5 +1,6 @@
 #include <cmath>
 #include "lemlib/timer.hpp"
+#include "lemlib/util.hpp"
 #include "main.h"
 #include "math.h"
 #include <optional>
@@ -45,7 +46,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
 
     // calculate target pose in standard form
     Pose target(x, y);
-    target.theta = lastPose.angle(target);
+    target.theta = radToDeg(lastPose.angle(target));
 
     // main loop
     while (!timer.isDone() && ((!localLateralSmallExit.getExit() && !localLateralLargeExit.getExit()) || !close) &&
@@ -61,9 +62,9 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         const float distTarget = pose.distance(target);
 
         // check if the robot is close enough to the target to start settling
-        if (distTarget < 7.5 && close == false) {
+        if (distTarget < 6 && close == false) {
             close = true;
-            params.maxSpeed = fmax(fabs(prevLateralOut), 60);
+            //params.maxSpeed = fmax(fabs(prevLateralOut), 60);
         }
 
         // motion chaining
@@ -87,6 +88,7 @@ void lemlib::Chassis::moveToPoint(float x, float y, int timeout, MoveToPointPara
         // get output from PIDs
         float lateralOut = localLateralPID.update(lateralError);
         float headingOut = localHeadingPID.update(radToDeg(headingError));
+        // Minimum power required to make the metal move (usually between 5 and 12)
         if (close) headingOut = 0;
 
         // apply restrictions on heading speed

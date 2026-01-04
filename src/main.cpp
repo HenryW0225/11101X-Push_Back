@@ -41,7 +41,7 @@ lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(4.2, // (kP) 4.2
+lemlib::ControllerSettings linearController(4.25, // (kP) 4.2
                                             0, // (kI)
                                             4, // (kD)
                                             0, //
@@ -53,7 +53,7 @@ lemlib::ControllerSettings linearController(4.2, // (kP) 4.2
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
+lemlib::ControllerSettings angularController(1.75 , // (kP)1.7 1.6
                                              0, // (kI)
                                              11, // (kD)11 10.5
                                              0, // anti windup
@@ -66,9 +66,9 @@ lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(0.2, // (kP) 2 1
+lemlib::ControllerSettings headingController(0.5, // (kP) 2 1
                                              0, // (kI)
-                                             8, // (kD) 20 1
+                                             30, // (kD) 20 1
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -181,7 +181,6 @@ void initialize() {
     pros::screen::set_eraser(pros::Color::black);
     pros::screen::set_pen(pros::Color::white);
     chassis.calibrate(); 
-    
 
     // red alliance - true, blue alliance - false
     intake.calibrate(true);

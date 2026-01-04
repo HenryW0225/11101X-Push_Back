@@ -133,6 +133,7 @@ void lemlib::Chassis::setPose(Pose pose, bool radians) { lemlib::setPose(pose, r
 
 lemlib::Pose lemlib::Chassis::getPose(bool radians, bool standardPos) {
     Pose pose = lemlib::getPose(true);
+    pose.theta *= gyroScale;
     if (standardPos) pose.theta = M_PI_2 - pose.theta;
     if (!radians) pose.theta = radToDeg(pose.theta);
     return pose;

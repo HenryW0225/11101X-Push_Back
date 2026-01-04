@@ -959,6 +959,8 @@ class Chassis {
         DriveCurve* throttleCurve;
         DriveCurve* steerCurve;
 
+        float gyroScale = 360.0f / 358.2f;
+
         ExitCondition lateralLargeExit;
         ExitCondition lateralSmallExit;
         ExitCondition angularLargeExit;
