@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "swp_new",
+    "project_name": "skill",
     "target": "v5",
     "templates": {
       "kernel": {
