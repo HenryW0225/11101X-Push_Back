@@ -250,28 +250,60 @@ void rightFourLong() {
 }
 
 void rightSevenLong() {
-    chassis.setPose(-9.5, 1.5, 0);
+    chassis.setPose(15.5, 1.5, 45);
     intake.intakeBlock();
-    chassis.turnToPoint(-3, 24.5, 1500, {.minSpeed = 30, .earlyExitRange = 4});
-    chassis.moveToPoint(-3, 24.5, 2000, {.minSpeed = 20, .earlyExitRange = 1});
-    pros::delay(400);
+    chassis.moveToPoint(18, 20, 2000, {.minSpeed = 35, .earlyExitRange = 1});
+    chassis.moveToPoint(22, 24.5, 2000, {.maxSpeed = 35, .earlyExitRange = 1});
     matchload.matchloadV(1);
-    //chassis.moveToPoint(-3, 24.5, 2500, {.maxSpeed = 15, .minSpeed = 10});
-    chassis.turnToPoint(24.75, 0, 2000, {.minSpeed = 10, .earlyExitRange = 1});
-    chassis.moveToPoint(24.75, 0, 3000);
-    //finish matchload #1
-    chassis.turnToPoint(24, 21, 1500, {.forwards = false, .minSpeed = 15, .earlyExitRange = 1});
-    chassis.moveToPoint(24, 21, 2500, {.forwards = false});
+    //grab 3 stack
+    chassis.turnToPoint(47.75, -1, 1500, {.minSpeed = 25, .earlyExitRange = 2});
+    chassis.moveToPoint(47.75, -1, 2000);
+    chassis.turnToPoint(47.8, -12.5, 1500, {.minSpeed = 30, .earlyExitRange = 2});
+    intake.intakeBlock();
+    chassis.moveToPoint(47.8, -12.5, 1100, {.maxSpeed = 70, .minSpeed = 40});
+    pros::delay(1100);
+    //matchload #1
+    chassis.moveToPoint(48.2, 19.5, 2000, {.forwards = false, .minSpeed = 35});
     chassis.waitUntil(24);
     matchload.matchloadV(0);
     intake.scoreHighGoal();
-    pros::delay(1200);
-    intake.stopIntake();
-    //finish score high goal
+    pros::delay(1300);
+    //score long goal
     chassis.swingToPoint(72, 8, DriveSide::LEFT, 2000, {.minSpeed = 45, .earlyExitRange = 5});
     chassis.turnToPoint(58, 33, 1500, {.forwards = false, .minSpeed = 25, .earlyExitRange = 2});
     chassis.moveToPoint(58, 33, 1500, {.forwards = false, .minSpeed = 60});
     chassis.turnToHeading(195, 2000, {.minSpeed = 40});
+    //wing push
+}
+
+void rightNineLong() {
+    chassis.setPose(15.5, 1.5, 45);
+    intake.intakeBlock();
+    chassis.moveToPoint(18, 20, 2000, {.minSpeed = 35, .earlyExitRange = 1});
+    chassis.moveToPoint(22, 24.5, 2000, {.maxSpeed = 35, .earlyExitRange = 1});
+    matchload.matchloadV(1);
+    //grab 3 stack
+    chassis.moveToPoint(41, 38, 2000, {.minSpeed = 20});
+    matchload.matchloadV(0);
+    //grab 4th ball
+    chassis.moveToPoint(24, 21, 2000, {.forwards = false, .minSpeed = 50, .earlyExitRange = 5});
+    chassis.moveToPoint(48, 2, 2000, {.forwards = false, .minSpeed = 15});
+    chassis.turnToPoint(48.2, 19.5, 1500, {.forwards = false, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.moveToPoint(48.2, 19.5, 2000, {.forwards = false, .minSpeed = 35});
+    chassis.waitUntil(7);
+    intake.scoreHighGoal();
+    pros::delay(1300);
+    chassis.turnToPoint(47.8, -12.5, 1500, {.minSpeed = 30, .earlyExitRange = 2});
+    intake.intakeBlock();
+    chassis.moveToPoint(47.8, -12.5, 1900, {.maxSpeed = 70, .minSpeed = 40});
+    pros::delay(1900);
+    //matchload #1
+    chassis.moveToPoint(48.2, 19.5, 2000, {.forwards = false, .minSpeed = 35});
+    chassis.waitUntil(24);
+    matchload.matchloadV(0);
+    intake.scoreHighGoal();
+    //score long goal
+
 }
 
 void soloWinPoint() {

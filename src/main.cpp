@@ -3,6 +3,7 @@
 #include "lemlib/chassis/odom.hpp"
 #include "pros/distance.hpp"
 #include "pros/motors.h"
+#include "pros/screen.h"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -112,40 +113,7 @@ lemlib::ControllerSettings headingControllerExtra(3, // (kP) 2 1
                                                   500, // large error range timeout, in milliseconds
                                                   0 // maximum acceleration (slew)
 );
-/*
-lemlib::ControllerSettings angularControllerLong(3, // (kP) 2
-                                             0, // (kI)
-                                             20, // (kD) 20
-                                             0, // anti windup
-                                             1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
-);
 
-lemlib::ControllerSettings angularControllerShort(1.9 , // (kP) 2
-                                             0, // (kI)
-                                             11, // (kD) 20
-                                             0, // anti windup
-                                             1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             2, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
-);
-
-lemlib::ControllerSettings angularControllerSwing(2.2, // (kP) 2
-                                             0, // (kI)
-                                             11, // (kD) 20
-                                             0, // anti windup
-                                             1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             2, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
-);
-*/
 // sensors for odometry
 lemlib::OdomSensors sensors(&vertical, 
                             nullptr, 
@@ -198,11 +166,17 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-
     intake.driverControl = false;
     intake.intakeJam(true);
-   
-    // Start the intake jam task
+    bool runAuton = true;
+    if (!horizontalEnc.is_installed()) {
+        pros::screen::print(pros::E_TEXT_LARGE, 0, "Horizontal Encoder not installed");
+        runAuton = false;
+    }
+    if (!verticalEnc.is_installed()) {
+        pros::screen::print(pros::E_TEXT_LARGE, 1, "Vertical Encoder not installed");
+        runAuton = false;
+    }
     pros::Task printCoordsTask([]() {
         bool thetaExceeded90 = false; // Track if theta has ever exceeded 90
         while (true) {
@@ -210,24 +184,12 @@ void autonomous() {
             pros::screen::print(pros::E_TEXT_MEDIUM, 0, "x: %.2f",pose.x);
             pros::screen::print(pros::E_TEXT_MEDIUM, 1, "y: %.2f", pose.y);
             pros::screen::print(pros::E_TEXT_MEDIUM, 2, "theta: %.2f", pose.theta);
-            pros::screen::print(pros::E_TEXT_MEDIUM, 4, "intake temp: %.2f", intake.intakeTemperature());
-           // pros::screen::print(pros::E_TEXT_MEDIUM, 3, "left voltage: %.2f", leftMotors.get_voltage_all());
-            
-            // Check if theta is greater than 90 degrees (only set flag, never clear it)
-            if (pose.theta > 91) {
-                thetaExceeded90 = true;
-            }
-            
-            // Show warning if theta has ever exceeded 90
-            if (thetaExceeded90) {
-                pros::screen::print(pros::E_TEXT_MEDIUM, 3, "WARNING: Theta > 91!");
-            } else {
-                pros::screen::print(pros::E_TEXT_MEDIUM, 3, ""); // Clear the warning
-            }
-            
-            pros::delay(20); // Update every 100ms
+            pros::delay(20); // Update every 20ms
         }
     });
+
+    if (runAuton)
+    {
     //odomTest();
     leftFourLongFourMiddle();
     //leftFourLongFourMiddleWing();
@@ -238,10 +200,10 @@ void autonomous() {
     //rightFourLong();
     //soloWinPoint();
     //skills();
+    }
 }
 
 void opcontrol() {
-
     intake.driverControl = true;
     intake.colorSortActive = false;
     while (true) {
@@ -257,10 +219,6 @@ void opcontrol() {
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.intakeOut();}
         //else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { intake.intakeOutSkills();}
         else { intake.stopIntake(); }
-
-        //if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        //    intake.colorSortActive = !intake.colorSortActive;
-        //}
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             matchload.matchloadChange();
