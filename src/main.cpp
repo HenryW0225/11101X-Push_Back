@@ -170,11 +170,11 @@ void autonomous() {
     intake.intakeJam(true);
     bool runAuton = true;
     if (!horizontalEnc.is_installed()) {
-        pros::screen::print(pros::E_TEXT_LARGE, 0, "Horizontal Encoder not installed");
+        pros::screen::print(pros::E_TEXT_LARGE, 3, "Horizontal Encoder not installed");
         runAuton = false;
     }
     if (!verticalEnc.is_installed()) {
-        pros::screen::print(pros::E_TEXT_LARGE, 1, "Vertical Encoder not installed");
+        pros::screen::print(pros::E_TEXT_LARGE, 4, "Vertical Encoder not installed");
         runAuton = false;
     }
     pros::Task printCoordsTask([]() {
@@ -191,14 +191,14 @@ void autonomous() {
     if (runAuton)
     {
     //odomTest();
-    leftFourLongFourMiddle();
+    //leftFourLongFourMiddle();
     //leftFourLongFourMiddleWing();
     //leftFourLong();
     //leftSevenLong();
     //rightFourLongThreeLow();
     //rightSevenLong();
     //rightFourLong();
-    //soloWinPoint();
+    soloWinPoint();
     //skills();
     }
 }

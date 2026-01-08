@@ -340,10 +340,10 @@ void soloWinPoint() {
         chassis.waitUntil(12.9);
         intake.intakePneumaticV(1);
         intake.intakeOutAuton();
-        chassis.turnToPoint(-46.9, -0.5, 800, {.minSpeed = 15, .earlyExitRange = 1});
+        chassis.turnToPoint(-46.85, -0.5, 800, {.minSpeed = 15, .earlyExitRange = 1});
         pros::delay(900);
         intake.stopIntake();
-        chassis.moveToPoint(-46.9, -0.5, 2000, {.maxSpeed = 105, .minSpeed = 10, .earlyExitRange = 2});
+        chassis.moveToPoint(-46.85, -0.5, 2000, {.maxSpeed = 105, .minSpeed = 10, .earlyExitRange = 2});
         pros::delay(300);
         intake.intakePneumaticV(0);
         intake.intakeBlock();
