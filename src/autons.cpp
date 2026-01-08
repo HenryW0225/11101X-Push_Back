@@ -277,8 +277,40 @@ void rightElim() {
 }
 
 void soloWinPoint() {
+        chassis.setPose(17.1, -4.1, 90);
+        chassis.moveToPoint(47.5, -4.1, 1500);
+        matchload.matchloadV(1);
+        wing.wingV(1);
+        chassis.turnToPoint(47.8, -12.5, 1500, {.minSpeed = 30, .earlyExitRange = 2});
+        intake.intakeBlock();
+        chassis.moveToPoint(47.8, -12.5, 2000, {.maxSpeed = 70, .minSpeed = 40});
+        pros::delay(2000);
+        //matchload #1
+        chassis.moveToPoint(48.2, -5, 2000, {.forwards = false, .minSpeed = 35});
+        matchload.matchloadV(0);
+        intake.stopIntake();
+        chassis.turnToPoint(59.5, 20, 2000, {.forwards = false, .minSpeed = 35});
+        chassis.moveToPoint(59.5, 20, 2000, {.forwards = false, .minSpeed = 35});
+
+        chassis.turnToPoint(59.5, 70, 2000, {.forwards = false});
+        chassis.moveToPoint(59.5, 70, 2000, {.forwards = false});
+
+        chassis.turnToPoint(48, 85, 2000, {.forwards = false});
+        chassis.moveToPoint(48, 85, 2000, {.forwards = false});
+
+        chassis.turnToPoint(48, 70, 2000, {.forwards = false});
+        chassis.moveToPoint(48, 70, 2000, {.forwards = false});
+        pros::delay(3000);
+        intake.scoreHighGoal();
+
+        chassis.turnToPoint(48, 106, 2000);
+        matchload.matchloadV(1);
+        chassis.moveToPoint(48, 106, 2000);
+
+        pros::delay(3000);
+        
         //new swp
-        chassis.setPose(18.1, -3.6, 90);
+        /*chassis.setPose(18.1, -3.6, 90);
         chassis.moveToPoint(47.5, -3.6, 1500);
         matchload.matchloadV(1);
         chassis.turnToPoint(47.8, -12.5, 1500, {.minSpeed = 30, .earlyExitRange = 2});
