@@ -4,10 +4,13 @@
 void odomTest();
 
 //match autons
-void leftQual();
-void rightQual();
-void leftElim();
-void rightElim();
+void leftFourLongFourMiddle();
+void leftFourLongFourMiddleWing();
+void leftFourLong();
+void leftSevenLong();
+void rightFourLongThreeLow();
+void rightSevenLong();
+void rightFourLong();
 void soloWinPoint();
 
 

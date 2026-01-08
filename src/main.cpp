@@ -229,11 +229,14 @@ void autonomous() {
         }
     });
     //odomTest();
-    leftQual();
-    //rightQual();
+    leftFourLongFourMiddle();
+    //leftFourLongFourMiddleWing();
+    //leftFourLong();
+    //leftSevenLong();
+    //rightFourLongThreeLow();
+    //rightSevenLong();
+    //rightFourLong();
     //soloWinPoint();
-    //leftElim();
-    //rightElim();
     //skills();
 }
 
