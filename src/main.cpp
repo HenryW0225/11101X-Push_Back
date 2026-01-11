@@ -198,8 +198,8 @@ void autonomous() {
     //rightFourLongThreeLow();
     //rightSevenLong();
     //rightFourLong();
-    soloWinPoint();
-    //skills();
+    //soloWinPoint();
+    skills();
     }
 }
 
@@ -217,7 +217,7 @@ void opcontrol() {
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtakeBlock(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intakeBlock(); }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.intakeOut();}
-        //else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { intake.intakeOutSkills();}
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { intake.intakeOutSkills();}
         else { intake.stopIntake(); }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
