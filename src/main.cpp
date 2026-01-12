@@ -191,7 +191,7 @@ void autonomous() {
     if (runAuton)
     {
     //odomTest();
-    //leftFourLongFourMiddle();
+    leftFourLongFourMiddle();
     //leftFourLongFourMiddleWing();
     //leftFourLong();
     //leftSevenLong();
@@ -199,7 +199,7 @@ void autonomous() {
     //rightSevenLong();
     //rightFourLong();
     //soloWinPoint();
-    skills();
+    //skills();
     }
 }
 

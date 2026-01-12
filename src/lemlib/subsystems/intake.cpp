@@ -72,7 +72,7 @@ void Intake::intakeOut() {
 
 void Intake::intakeOutAuton() {
     moveBottomIntake(600);
-    moveTopIntake(250);
+    moveTopIntake(325);
 }
 
 void Intake::intakeOutSkills() {
