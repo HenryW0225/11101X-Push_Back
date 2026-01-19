@@ -16,8 +16,8 @@ lemlib::OdomSensors::OdomSensors(TrackingWheel* vertical1, TrackingWheel* vertic
       horizontal1(horizontal1),
       horizontal2(horizontal2),
       imu(imu),
-      distanceLeftBack(distanceLeftBack),
-      distanceLeftFront(distanceLeftFront) {}
+      distanceLeft(distanceLeftBack),
+      distanceFront(distanceLeftFront) {}
 
 lemlib::Drivetrain::Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* rightMotors, float trackWidth,
                                float wheelDiameter, float rpm, float horizontalDrift)
@@ -193,26 +193,39 @@ void lemlib::Chassis::setBrakeMode(pros::motor_brake_mode_e mode) {
     drivetrain.rightMotors->set_brake_mode_all(mode);
 }
 
-void lemlib::Chassis::resetWithDistance(double wall){
+/*void lemlib::Chassis::resetWithDistance(double wall){
     float y = this->getPose().y;
     float theta = this->getPose().theta;
-    lemlib::setPose(lemlib::Pose((wall - getLeftBackDistance()), y, theta));
-}
+    lemlib::setPose(lemlib::Pose((wall - getFrontDistance()), y, theta));
+}*/
 
 double lemlib::Chassis::resetAngleWithSelfCorrectionInches(){
     lemlib::resetAngleWithSelfCorrectionInches();
 }
-/*
-void lemlib::Chassis::distanceReset(double count) {
+
+void lemlib::Chassis::resetDistance() {
     double sum;
     double average;
-    for(int i = 0; i < count; i++)
-    {
-        sum += distance1.get_distance();
-        pros::delay(20);
+
+    double dFront;
+    double dRight;
+    double dLeft;
+    double x;
+    
+
+    dFront = getFrontDistance();
+    dRight = getRightDistance();
+    dLeft = getLeftDistance();
+
+    if(dFront < dRight){
+        x = dFront;
     }
-    average = sum/count*0.0393701;
-    setPose(average, pose.y, pose.theta);
+    else{
+        x = dRight;
+    }
+
+    Chassis::setPose(x, dFront, getPose().theta);
+    
 }
 
 /*void lemlib::Chassis::odomConfiguration() {
@@ -229,3 +242,4 @@ void lemlib::Chassis::distanceReset(double count) {
     pros::delay(500);
 
 }*/
+

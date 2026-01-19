@@ -64,9 +64,9 @@ double distanceReset();
 const double BASE_WIDTH_IN = 6.375;
 const double CALIB_ANGLE = 5.0;
 double mmToInches(double mm);
-double getLeftBackDistance();
-double getLeftFrontDistance();
-double getBackDistance();
+double getLeftDistance();
+double getFrontDistance();
+double getRightDistance();
 double readDistanceInches();
 double resetAngleWithSelfCorrectionInches();
 

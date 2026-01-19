@@ -200,21 +200,31 @@ double lemlib::horizontalDistance() {
     if (odomSensors.horizontal2 != nullptr) return odomSensors.horizontal2->getDistanceTraveled();
     return 0;
 }
-double lemlib::getBackDistance() {
+double lemlib::getRightDistance() {
     double sum = 0.0;  // initialize!
     for(int i = 0; i < 5; i++)
     {
-        sum += odomSensors.distanceLeftBack->get_distance();
+        sum += odomSensors.distanceRight->get_distance();
         pros::delay(20);
     }
     return sum / 5.0 * 0.0393701;  // convert mm -> inches
 }
 
-double lemlib::getLeftFrontDistance() {
+double lemlib::getFrontDistance() {
     double sum = 0.0;  // initialize!
     for(int i = 0; i < 5; i++)
     {
-        sum += odomSensors.distanceLeftFront->get_distance();
+        sum += odomSensors.distanceFront->get_distance();
+        pros::delay(20);
+    }
+    return sum / 5.0 * 0.0393701;  // convert mm -> inches
+}
+
+double lemlib::getLeftDistance() {
+    double sum = 0.0;  // initialize!
+    for(int i = 0; i < 5; i++)
+    {
+        sum += odomSensors.distanceLeft->get_distance();
         pros::delay(20);
     }
     return sum / 5.0 * 0.0393701;  // convert mm -> inches
@@ -222,15 +232,15 @@ double lemlib::getLeftFrontDistance() {
 
 double lemlib::resetAngleWithSelfCorrectionInches() {
     // 1. Take initial readings (averaged, in inches)
-    double L1 = getLeftFrontDistance();   // LEFT distance sensor
-    double R1 = getBackDistance();        // RIGHT distance sensor
+    double L1 = getLeftDistance();   // LEFT distance sensor
+    double R1 = getRightDistance();        // RIGHT distance sensor
 
     if (std::isnan(L1) || std::isnan(R1)) return 0.0;
 
     // 2. (Optional) take another reading for more accuracy
     // You can simulate a “+5° rotation” by moving the robot slightly in auton if needed.
-    double L2 = getLeftFrontDistance();
-    double R2 = getBackDistance();
+    double L2 = getLeftDistance();
+    double R2 = getRightDistance();
 
     if (std::isnan(L2) || std::isnan(R2)) return 0.0;
 

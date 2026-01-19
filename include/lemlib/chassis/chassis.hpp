@@ -25,8 +25,9 @@ class OdomSensors {
         TrackingWheel* horizontal1;
         TrackingWheel* horizontal2;
         pros::Imu* imu;
-        pros::Distance* distanceLeftBack;
-        pros::Distance* distanceLeftFront;
+        pros::Distance* distanceFront;
+        pros::Distance* distanceLeft;
+        pros::Distance* distanceRight;
 };
 
 /**
@@ -914,8 +915,9 @@ class Chassis {
         /**
          * reset with distance sensor
          */
-        void resetWithDistance(double wall);
+        void resetDistance();
         double resetAngleWithSelfCorrectionInches();
+        void resetWithDistanceSensors();
        
         PID lateralPID;
         /**
