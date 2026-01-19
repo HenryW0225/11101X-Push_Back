@@ -30,9 +30,9 @@ void odomTest() {
     }*/
     //chassis.calibrate(true);
     chassis.setPose(0, 0, 0);
-    //chassis.moveToPoint(0, 48, 5000);
+    chassis.moveToPoint(0, 48, 5000);
     //chassis.moveToPoint(0, 48, 5000, {.forwards = false});
-    chassis.turnToHeading(90, 5000);
+   // chassis.turnToHeading(90, 5000);
     //chassis.moveToPoint(0, 48, 5000);
     /*chassis.setPose(0,0,0);
     chassis.moveToPoint(0, 48, 5000);

@@ -2,6 +2,7 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/odom.hpp"
 #include "pros/distance.hpp"
+#include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/screen.h"
 
@@ -67,9 +68,9 @@ lemlib::ControllerSettings angularController(1.65 , // (kP)1.7 1.6
 
 
 // heading motion controller
-lemlib::ControllerSettings headingController(0.6, // (kP) 2 1
+lemlib::ControllerSettings headingController(0.6, // (kP) 0.6
                                              0, // (kI)
-                                             11, // (kD) 20 1
+                                             11, // (kD)  11
                                              0, // anti windup
                                              1, // small error range, in degrees
                                              100, // small error range timeout, in milliseconds
@@ -79,7 +80,7 @@ lemlib::ControllerSettings headingController(0.6, // (kP) 2 1
 );
 
 // extra lateral motion controller
-lemlib::ControllerSettings linearControllerExtra(4.2, // (kP) 4.067
+lemlib::ControllerSettings linearControllerExtra(4, // (kP) 4.2
                                                  0, // (kI)
                                                  4, // (kD)
                                                  0, //
@@ -190,8 +191,8 @@ void autonomous() {
 
     if (runAuton)
     {
-    //odomTest();
-    leftFourLongFourMiddle();
+    odomTest();
+    //leftFourLongFourMiddle();
     //leftFourLongFourMiddleWing();
     //leftFourLong();
     //leftSevenLong();
@@ -213,11 +214,22 @@ void opcontrol() {
        // if (fabs(horz) < 7) horz = 0;
         chassis.arcade(vert, horz);
        
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intake.scoreHighGoal(); }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { 
+            intake.scoreHighGoal();
+            intake.intakePneumatic.set_value(0);
+        }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { intake.outtakeBlock(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intake.intakeBlock(); }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { intake.intakeOut();}
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { intake.intakeOutSkills();}
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
+            intake.intakeBlock(); 
+            intake.intakePneumatic.set_value(0);
+        }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
+            intake.intakeOut();
+            intake.intakePneumatic.set_value(1);
+        }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { 
+            intake.intakeOutSkills(); 
+            intake.intakePneumatic.set_value(1);}
         else { intake.stopIntake(); }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {

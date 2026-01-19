@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "leftFour_Four",
+    "project_name": "test8",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -593,7 +593,7 @@
     },
     "upload_options": {
       "description": "leftFour_Four",
-      "slot": 2,
+      "slot": 8,
       "icon": "pros"
     },
     "use_early_access": false
