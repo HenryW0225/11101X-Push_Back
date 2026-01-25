@@ -176,8 +176,12 @@ struct TurnToPointParams {
         /** angle between the robot and target point where the movement will exit. Only has an effect if minSpeed is
          * non-zero.*/
         float earlyExitRange = 0;
-        /** PID selector: 0 for normal PID values, 1 for extra PID values. 0 by default */
+        /** whether to use short turn PID values. False by default */
+        bool shortTurn = false;
+        /** PID selector: 0 for normal PID values, 1 for short turn, 2 for 135 degree turn, 3 for 180 degree turn. 0 by default */
         int pidSelector = 0;
+        /** whether to clamp the turn speed based on distance traveled */
+        int turnClamping = 0;
 };
 
 /**
@@ -199,6 +203,8 @@ struct TurnToHeadingParams {
         /** angle between the robot and target point where the movement will exit. Only has an effect if minSpeed is
          * non-zero.*/
         float earlyExitRange = 0;
+        /** PID selector: 0 for normal PID values, 1 for extra PID values. 0 by default */
+        int pidSelector = 0;
 };
 
 /**
@@ -305,6 +311,8 @@ struct MoveToPointParams {
         float earlyExitRange = 0;
         /** PID selector: 0 for normal PID values, 1 for extra PID values. 0 by default */
         int pidSelector = 0;
+        /** decides if distance clamping is enabled */
+        bool clampDistance = true;
 };
 
 // default drive curve
@@ -321,9 +329,11 @@ class Chassis {
          * @param drivetrain drivetrain to be used for the chassis
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
-         * @param lateralSettingsExtra extra settings for the lateral controller
-         * @param angularSettingsExtra extra settings for the angular controller
-         * @param headingSettingsExtra extra settings for the heading controller
+         * @param lateralSettingsCurve extra settings for the lateral controller
+         * @param angularSettingsShort extra settings for the angular controller
+         * @param angularSettings135 settings for 135 degree turns
+         * @param angularSettings180 settings for 180 degree turns
+         * @param headingSettingsCurve extra settings for the heading controller
          * @param sensors sensors to be used for odometry
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
@@ -331,7 +341,7 @@ class Chassis {
          * @example main.cpp
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings,
-                ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
+                ControllerSettings linearSettingsCurve, ControllerSettings angularSettingsShort, ControllerSettings angularSettings135, ControllerSettings angularSettings180, ControllerSettings headingSettingsCurve,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
@@ -341,9 +351,11 @@ class Chassis {
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
          * @param headingSettings settings for the heading controller (used in drive functions)
-         * @param lateralSettingsExtra extra settings for the lateral controller
-         * @param angularSettingsExtra extra settings for the angular controller
-         * @param headingSettingsExtra extra settings for the heading controller
+         * @param lateralSettingsCurve extra settings for the lateral controller
+         * @param angularSettingsShort extra settings for the angular controller
+         * @param angularSettings135 settings for 135 degree turns
+         * @param angularSettings180 settings for 180 degree turns
+         * @param headingSettingsCurve extra settings for the heading controller
          * @param sensors sensors to be used for odometry
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
@@ -351,7 +363,7 @@ class Chassis {
          * @example main.cpp
          */
         Chassis(Drivetrain drivetrain, ControllerSettings linearSettings, ControllerSettings angularSettings, ControllerSettings headingSettings,
-                ControllerSettings linearSettingsExtra, ControllerSettings angularSettingsExtra, ControllerSettings headingSettingsExtra,
+                ControllerSettings linearSettingsCurve, ControllerSettings angularSettingsShort, ControllerSettings angularSettings135, ControllerSettings angularSettings180, ControllerSettings headingSettingsCurve,
                 OdomSensors sensors, DriveCurve* throttleCurve = &defaultDriveCurve,
                 DriveCurve* steerCurve = &defaultDriveCurve);
         /**
@@ -552,6 +564,9 @@ class Chassis {
          * // turn the robot to face heading 45 with a timeout of 2000ms
          * // and a minSpeed of 60, and exit the movement if the robot is within 5 degrees of the target
          * chassis.turnToHeading(45, 2000, {.minSpeed = 60, .earlyExitRange = 5});
+         * // turn the robot to face heading 90 with a timeout of 1000ms
+         * // using extra PID values
+         * chassis.turnToHeading(90, 1000, {.pidSelector = 1});
          * @endcode
          */
         void turnToHeading(float theta, int timeout, TurnToHeadingParams params = {}, bool async = true);
@@ -950,16 +965,16 @@ class Chassis {
         ControllerSettings lateralSettings;
         ControllerSettings angularSettings;
         ControllerSettings headingSettings;
-        ControllerSettings lateralSettingsExtra;
-        ControllerSettings angularSettingsExtra;
-        ControllerSettings headingSettingsExtra;
+        ControllerSettings lateralSettingsCurve;
+        ControllerSettings angularSettingsShort;
+        ControllerSettings angularSettings135;
+        ControllerSettings angularSettings180;
+        ControllerSettings headingSettingsCurve;
 
         Drivetrain drivetrain;
         OdomSensors sensors;
         DriveCurve* throttleCurve;
         DriveCurve* steerCurve;
-
-        float gyroScale = 360.0f / 358.2f;
 
         ExitCondition lateralLargeExit;
         ExitCondition lateralSmallExit;
@@ -967,7 +982,7 @@ class Chassis {
         ExitCondition angularSmallExit;
         ExitCondition headingLargeExit;
         ExitCondition headingSmallExit;
-    private:
+        private:
         pros::Mutex mutex;
 };
 } // namespace lemlib
